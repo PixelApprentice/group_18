@@ -82,21 +82,21 @@ We are passionate about making security education accessible, practical, and han
 
 ---
 
-## 📂 Project Structure (Sample)
+## 📂 Project Structure
 
+```
 project-root/
-│
 ├── app/                         # Backend code (Node.js)
 │   ├── routes/                  # HTTP route handlers
 │   ├── templates/               # HTML templates for frontend
 │   ├── static/                  # CSS, JavaScript files
 │   ├── challenges/              # Vulnerable challenge pages
 │   └── database/                # Database files and models
-│
 ├── content/                     # Educational material and quizzes
 ├── README.md                    # Project documentation
 ├── LICENSE                      # Project license file (MIT)
 └── index.js                     # Backend entry point
+```
 
 ---
 
