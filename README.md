@@ -1,4 +1,4 @@
-# group_18# 🛡️ **SEKUR** : OWASP & Web Security Interactive Learning Platform
+# 🛡️ **SEKUR** : OWASP & Web Security Interactive Learning Platform
 
 An interactive, web-based educational platform designed to teach users about common web security vulnerabilities through a mix of theory, quizzes, and **hands-on simulated challenges**.
 
