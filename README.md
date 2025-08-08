@@ -6,17 +6,7 @@ An interactive, web-based educational platform designed to teach users about com
 
 ## 🎯 Project Goal
 
-This platform aims to provide beginners and students with **practical cybersecurity knowledge** by explaining common web attacks, demonstrating how they work, and **allowing users to exploit intentionally vulnerable challenges in a safe environment**.
-
----
-
-## 🌟 What Makes SEKUR Different
-
-- **Simplicity and Clarity:** Our content breaks down complex cybersecurity concepts into easy-to-understand explanations, making it beginner-friendly.  
-- **User-Friendly Experience:** The platform combines learning and practice seamlessly, unlocking challenges only after users demonstrate understanding via quizzes.  
-- **Localized Accessibility:** We plan to provide educational materials in **Amharic and other Ethiopian local languages** to make cybersecurity education accessible to a broader audience.  (Future Plan)
-- **Focused on Practical Skills:** Unlike many platforms that focus solely on theory, SEKUR emphasizes hands-on simulations of real-world vulnerabilities in a safe environment.  
-- **Open and Expandable:** Designed to grow with community contributions and feature additions like AI chatbots,supporting local languages, leaderboards, and certificates.  
+This platform aims to provide beginners and students with **practical cybersecurity knowledge** by explaining common web attacks, demonstrating how they work, and **allowing users to exploit intentionally vulnerable challenges in a safe environment**. 
 
 ---
 
@@ -53,6 +43,16 @@ This platform aims to provide beginners and students with **practical cybersecur
 
 
 > ⚠️ Only a subset of these will have working simulation challenges in the **initial release** 
+---
+
+## 🌟 What Makes SEKUR Different
+
+- **Simplicity and Clarity:** Our content breaks down complex cybersecurity concepts into easy-to-understand explanations, making it beginner-friendly.  
+- **User-Friendly Experience:** The platform combines learning and practice seamlessly, unlocking challenges only after users demonstrate understanding via quizzes.  
+- **Localized Accessibility:** We plan to provide educational materials in **Amharic and other Ethiopian local languages** to make cybersecurity education accessible to a broader audience.  (Future Plan)
+- **Focused on Practical Skills:** Unlike many platforms that focus solely on theory, SEKUR emphasizes hands-on simulations of real-world vulnerabilities in a safe environment.  
+- **Open and Expandable:** Designed to grow with community contributions and feature additions like AI chatbots,supporting local languages, leaderboards, and certificates. 
+
 ---
 
 ## 🚀 Future Plans
