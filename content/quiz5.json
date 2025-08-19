@@ -1,0 +1,30 @@
+{
+  "lessonId": 5,
+  "title": "Practice Quiz",
+  "questions": [
+    {
+      "type": "multiple-choice",
+      "text": "Which HTTP method is used to update a resource?",
+      "answers": [
+        { "text": "GET", "isCorrect": false },
+        { "text": "PATCH", "isCorrect": true },
+        { "text": "DELETE", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "true-false",
+      "text": "A 404 status means Not Found.",
+      "correctAnswer": true
+    },
+    {
+      "type": "fill-in-the-blank",
+      "text": "The protocol used for secure web traffic is ________.",
+      "correctAnswer": "HTTPS"
+    },
+    {
+      "type": "short-answer",
+      "text": "Name a common web vulnerability.",
+      "correctAnswer": "XSS"
+    }
+  ]
+}

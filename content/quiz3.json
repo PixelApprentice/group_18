@@ -1,0 +1,22 @@
+{
+  "lessonId": 3,
+  "title": "CSRF Quiz",
+  "questions": [
+    {
+      "text": "What does CSRF stand for?",
+      "answers": [
+        { "text": "Cross-Site Request Forgery", "isCorrect": true },
+        { "text": "Client-Side Rendering Framework", "isCorrect": false },
+        { "text": "Cookie Session Randomization Factor", "isCorrect": false }
+      ]
+    },
+    {
+      "text": "A good defense against CSRF is:",
+      "answers": [
+        { "text": "CSRF tokens", "isCorrect": true },
+        { "text": "Using only GET requests", "isCorrect": false },
+        { "text": "Disabling JavaScript", "isCorrect": false }
+      ]
+    }
+  ]
+}

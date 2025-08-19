@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+  progress  UserProgress[]
+}
+
+model Lesson {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String   // Path to markdown file or content
+  quizzes   Quiz[]
+  progress  UserProgress[]
+}
+
+model Quiz {
+  id        Int      @id @default(autoincrement())
+  lessonId  Int
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  title     String   // Quiz title
+  questions QuizQuestion[]
+}
+
+model QuizQuestion {
+  id        Int      @id @default(autoincrement())
+  quizId    Int
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  question  String
+  answers   QuizAnswer[]
+}
+
+model QuizAnswer {
+  id         Int      @id @default(autoincrement())
+  questionId Int
+  question   QuizQuestion @relation(fields: [questionId], references: [id])
+  answer     String
+  isCorrect  Boolean
+}
+
+model UserProgress {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  lessonId  Int
+  completed Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+}
