@@ -11,9 +11,16 @@
 ---
 
 ## Authentication
-- **Register:** `POST /users` (public)
 - **Login:** `POST /auth/login` (public)
-- **All other user/lesson/quiz management endpoints require a valid JWT in the `Authorization: Bearer <token>` header.**
+- **User Registration:** `POST /users` (public - for regular users only)
+- **Admin Creation:** `POST /users/admin` (admin only - for creating admin users)
+- **All other user/lesson/quiz management endpoints require a valid JWT in the `Authorization: Bearer <token>` header.
+
+### 🔐 How Admins Are Created
+Since admin creation is restricted for security, the initial admin user is created through:
+1. **Database Seeding** - Run `npm run seed` to create initial admin and user accounts
+2. **Environment Variables** - Set `ADMIN_PASSWORD` and `USER_PASSWORD` in your `.env` file
+3. **Admin Management** - Existing admins can create new admin users via `POST /users/admin`
 
 ---
 
@@ -21,11 +28,27 @@
 
 | Method | Endpoint      | Description         | Auth Required | Valid Request Body | Example Successful Response |
 |--------|--------------|--------------------|--------------|--------------------|----------------------------|
-| POST   | /users       | Register a new user| No           | `{ "email": "user@example.com", "name": "User", "password": "StrongP@ssw0rd!" }` | `{ "id": 1, "email": "user@example.com", "name": "User", "createdAt": "..." }` |
-| POST   | /auth/login  | Login, returns JWT | No           | `{ "email": "user@example.com", "password": "StrongP@ssw0rd!" }` | `{ "access_token": "jwt...", "user": { "id": 1, "email": "user@example.com", "name": "User", "createdAt": "..." } }` |
-| GET    | /users       | Get all users      | Yes          | (none)             | `[ { "id": 1, "email": "...", "name": "...", "createdAt": "..." }, ... ]` |
-| PATCH  | /users/:id   | Update user info   | Yes          | `{ "name": "New Name" }` | `{ "id": 1, "email": "...", "name": "New Name", "createdAt": "..." }` |
-| DELETE | /users/:id   | Delete a user      | Yes          | (none)             | `{ "id": 1, "email": "...", "name": "...", "createdAt": "..." }` |
+| POST   | /auth/login  | Login, returns JWT | No           | `{ "email": "user@example.com", "password": "StrongP@ssw0rd!" }` | `{ "access_token": "jwt...", "user": { "id": 1, "email": "user@example.com", "name": "User", "role": "USER", "createdAt": "..." } }` |
+
+### User Self-Management (Authenticated Users)
+| Method | Endpoint      | Description         | Auth Required | Role Required | Valid Request Body | Example Successful Response |
+|--------|--------------|--------------------|--------------|---------------|--------------------|----------------------------|
+| GET    | /users/profile| Get own profile     | Yes          | Any           | (none)             | `{ "id": 1, "email": "...", "name": "...", "role": "USER", "createdAt": "..." }` |
+| PATCH  | /users/profile| Update own profile  | Yes          | Any           | `{ "name": "New Name" }` | `{ "id": 1, "email": "...", "name": "New Name", "role": "USER", "createdAt": "..." }` |
+| DELETE | /users/profile| Delete own account  | Yes          | Any           | (none)             | `{ "id": 1, "email": "...", "name": "...", "role": "USER", "createdAt": "..." }` |
+
+### User Registration (Public)
+| Method | Endpoint      | Description         | Auth Required | Role Required | Valid Request Body | Example Successful Response |
+|--------|--------------|--------------------|--------------|---------------|--------------------|----------------------------|
+| POST   | /users       | Register new user   | No           | None          | `{ "email": "user@example.com", "name": "User", "password": "StrongP@ssw0rd!" }` | `{ "id": 1, "email": "user@example.com", "name": "User", "role": "USER", "createdAt": "..." }` |
+
+### User Management (Admin Only)
+| Method | Endpoint      | Description         | Auth Required | Role Required | Valid Request Body | Example Successful Response |
+|--------|--------------|--------------------|--------------|---------------|--------------------|----------------------------|
+| POST   | /users/admin | Create admin user   | Yes          | ADMIN         | `{ "email": "admin@example.com", "name": "Admin", "password": "StrongP@ssw0rd!" }` | `{ "id": 2, "email": "admin@example.com", "name": "Admin", "role": "ADMIN", "createdAt": "..." }` |
+| GET    | /users       | Get all users       | Yes          | ADMIN         | (none)             | `[ { "id": 1, "email": "...", "name": "...", "role": "USER", "createdAt": "..." }, ... ]` |
+| PATCH  | /users/:id   | Update any user     | Yes          | ADMIN         | `{ "name": "New Name", "role": "ADMIN" }` | `{ "id": 1, "email": "...", "name": "...", "role": "ADMIN", "createdAt": "..." }` |
+| DELETE | /users/:id   | Delete any user     | Yes          | ADMIN         | (none)             | `{ "id": 1, "email": "...", "name": "...", "role": "USER", "createdAt": "..." }` |
 
 ---
 
@@ -400,22 +423,26 @@
 | **Authentication** |
 | POST | /auth/login | Login, returns JWT | No |
 | **Users** |
-| POST | /users | Register a new user | No |
-| GET | /users | Get all users | Yes |
-| PATCH | /users/:id | Update user info | Yes |
-| DELETE | /users/:id | Delete a user | Yes |
+| POST | /users | Register new user (Public) | No |
+| POST | /users/admin | Create admin user (Admin only) | Yes |
+| GET | /users | Get all users (Admin only) | Yes |
+| PATCH | /users/:id | Update any user (Admin only) | Yes |
+| DELETE | /users/:id | Delete any user (Admin only) | Yes |
+| GET | /users/profile | Get own profile | Yes |
+| PATCH | /users/profile | Update own profile | Yes |
+| DELETE | /users/profile | Delete own account | Yes |
 | **Lessons** |
-| POST | /lessons | Create a new lesson | No |
+| POST | /lessons | Create a new lesson (Admin only) | Yes |
 | GET | /lessons | Get all lessons | No |
 | GET | /lessons/:id | Get a lesson by ID | No |
-| PATCH | /lessons/:id | Update a lesson | No |
-| DELETE | /lessons/:id | Delete a lesson | No |
+| PATCH | /lessons/:id | Update a lesson (Admin only) | Yes |
+| DELETE | /lessons/:id | Delete a lesson (Admin only) | Yes |
 | GET | /lessons/:id/quiz | Get the quiz for a lesson | No |
 | **Quizzes** |
-| POST | /quizzes | Create a quiz | Yes |
+| POST | /quizzes | Create a quiz (Admin only) | Yes |
 | GET | /quizzes/:id | Get a quiz by ID | Yes |
-| PATCH | /quizzes/:id | Update a quiz | Yes |
-| DELETE | /quizzes/:id | Delete a quiz | Yes |
+| PATCH | /quizzes/:id | Update a quiz (Admin only) | Yes |
+| DELETE | /quizzes/:id | Delete a quiz (Admin only) | Yes |
 | POST | /quizzes/:id/submit | Submit quiz answers | Yes |
 | GET | /quizzes/:id/attempts | Get user's quiz attempts | Yes |
 | **Progress** |

@@ -18,6 +18,7 @@ model User {
   email     String   @unique
   name      String
   password  String
+  role      UserRole @default(USER)
   createdAt DateTime @default(now())
   progress  UserProgress[]
   quizAttempts QuizAttempt[]
@@ -102,4 +103,9 @@ model QuizAttemptAnswer {
   pointsEarned Int      @default(0)
   attempt      QuizAttempt @relation(fields: [attemptId], references: [id])
   question     QuizQuestion @relation(fields: [questionId], references: [id])
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }

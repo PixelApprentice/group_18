@@ -4,6 +4,7 @@ import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { SubmitQuizDto } from './dto/submit-quiz.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AdminGuard } from '../auth/admin.guard';
 
 @Controller('quizzes')
 @UseGuards(JwtAuthGuard)
@@ -15,8 +16,9 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 export class QuizzesController {
   constructor(private quizzesService: QuizzesService) {}
 
-  // POST /quizzes - create a quiz for a lesson
+  // POST /quizzes - create a quiz for a lesson (Admin only)
   @Post()
+  @UseGuards(AdminGuard)
   async create(@Body() createQuizDto: CreateQuizDto) {
     return this.quizzesService.create(
       createQuizDto.lessonId, 
@@ -31,14 +33,16 @@ export class QuizzesController {
     return this.quizzesService.findOne(id);
   }
 
-  // PATCH /quizzes/:id - update a quiz
+  // PATCH /quizzes/:id - update a quiz (Admin only)
   @Patch(':id')
+  @UseGuards(AdminGuard)
   async update(@Param('id', ParseIntPipe) id: number, @Body() updateQuizDto: UpdateQuizDto) {
     return this.quizzesService.update(id, updateQuizDto);
   }
 
-  // DELETE /quizzes/:id - delete a quiz
+  // DELETE /quizzes/:id - delete a quiz (Admin only)
   @Delete(':id')
+  @UseGuards(AdminGuard)
   async delete(@Param('id', ParseIntPipe) id: number) {
     return this.quizzesService.remove(id);
   }

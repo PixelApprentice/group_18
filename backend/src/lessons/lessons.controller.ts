@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Patch, Delete, Param, Body, ParseIntPipe, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, ParseIntPipe, ValidationPipe, UseGuards } from '@nestjs/common';
 import { LessonsService } from './lessons.service';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import * as fs from 'fs/promises';
 import { join } from 'path';
 import { QuizzesService } from '../quizzes/quizzes.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AdminGuard } from '../auth/admin.guard';
 
 @Controller('lessons')
 export class LessonsController {
@@ -13,8 +15,9 @@ export class LessonsController {
     private quizzesService: QuizzesService // Inject QuizzesService
   ) {}
 
-  // POST /lessons - create a new lesson
+  // POST /lessons - create a new lesson (Admin only)
   @Post()
+  @UseGuards(JwtAuthGuard, AdminGuard)
   async create(
     @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) createLessonDto: CreateLessonDto
   ) {
@@ -39,8 +42,9 @@ export class LessonsController {
     return this.quizzesService.findByLessonId(id);
   }
 
-  // PATCH /lessons/:id - update a lesson by id
+  // PATCH /lessons/:id - update a lesson by id (Admin only)
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) updateLessonDto: UpdateLessonDto
@@ -48,8 +52,9 @@ export class LessonsController {
     return this.lessonsService.update(id, updateLessonDto);
   }
 
-  // DELETE /lessons/:id - delete a lesson by id
+  // DELETE /lessons/:id - delete a lesson by id (Admin only)
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   async remove(@Param('id', ParseIntPipe) id: number) {
     return this.lessonsService.remove(id);
   }
