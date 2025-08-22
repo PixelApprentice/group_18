@@ -83,7 +83,7 @@ export class QuizzesService {
   }
 
   // Submit quiz answers and evaluate
-  async submitQuiz(quizId: number, submitQuizDto: SubmitQuizDto) {
+  async submitQuiz(quizId: number, submitQuizDto: SubmitQuizDto, userId: number) {
     const quiz = await this.findOne(quizId);
     let totalScore = 0;
     const maxScore = quiz.questions.reduce((sum, q) => sum + (q.points || 1), 0);
@@ -131,14 +131,17 @@ export class QuizzesService {
       });
     }
 
+    // Calculate percentage first
+    const percentage = Math.round((totalScore / maxScore) * 100);
+    
     // Create quiz attempt record
     const attempt = await this.prisma.quizAttempt.create({
       data: {
-        userId: 1, // TODO: Get from JWT token
+        userId,
         quizId,
         score: totalScore,
         maxScore,
-        completed: true,
+        completed: percentage >= 75, // Only mark as completed if score >= 75%
         completedAt: new Date(),
         answers: {
           create: results.map((r: any) => ({
@@ -151,14 +154,51 @@ export class QuizzesService {
       },
       include: { answers: true },
     });
+    
+    // If user scored 75% or higher, automatically mark the lesson as completed
+    if (percentage >= 75) {
+      try {
+        // Get the lesson ID from the quiz
+        const quizWithLesson = await this.prisma.quiz.findUnique({
+          where: { id: quizId },
+          select: { lessonId: true },
+        });
+        
+        if (quizWithLesson) {
+          // Mark lesson as completed in user progress
+          await this.prisma.userProgress.upsert({
+            where: {
+              userId_lessonId: {
+                userId,
+                lessonId: quizWithLesson.lessonId,
+              },
+            },
+            update: {
+              completed: true,
+            },
+            create: {
+              userId,
+              lessonId: quizWithLesson.lessonId,
+              completed: true,
+            },
+          });
+          
+          console.log(`Lesson ${quizWithLesson.lessonId} automatically marked as completed for user ${userId} (Quiz score: ${percentage}%)`);
+        }
+      } catch (error) {
+        console.error('Error updating lesson progress:', error);
+        // Don't fail the quiz submission if progress update fails
+      }
+    }
 
     return {
       attemptId: attempt.id,
       score: totalScore,
       maxScore,
-      percentage: Math.round((totalScore / maxScore) * 100),
+      percentage,
       results,
       completedAt: attempt.completedAt,
+      lessonCompleted: percentage >= 75,
     };
   }
 
@@ -178,9 +218,9 @@ export class QuizzesService {
   }
 
   // Get user's quiz attempts
-  async getUserAttempts(quizId: number) {
+  async getUserAttempts(quizId: number, userId: number) {
     return this.prisma.quizAttempt.findMany({
-      where: { quizId },
+      where: { quizId, userId },
       include: { answers: true },
       orderBy: { startedAt: 'desc' },
     });

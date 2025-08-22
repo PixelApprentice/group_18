@@ -1,10 +1,12 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe, ValidationPipe, UsePipes } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Param, Body, ParseIntPipe, ValidationPipe, UsePipes, UseGuards, Request } from '@nestjs/common';
 import { QuizzesService } from './quizzes.service';
 import { CreateQuizDto } from './dto/create-quiz.dto';
 import { UpdateQuizDto } from './dto/update-quiz.dto';
 import { SubmitQuizDto } from './dto/submit-quiz.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('quizzes')
+@UseGuards(JwtAuthGuard)
 @UsePipes(new ValidationPipe({ 
   whitelist: true, 
   forbidNonWhitelisted: true,
@@ -45,14 +47,17 @@ export class QuizzesController {
   @Post(':id/submit')
   async submitQuiz(
     @Param('id', ParseIntPipe) id: number,
-    @Body() submitQuizDto: SubmitQuizDto
+    @Body() submitQuizDto: SubmitQuizDto,
+    @Request() req
   ) {
-    return this.quizzesService.submitQuiz(id, submitQuizDto);
+    const userId = req.user.userId;
+    return this.quizzesService.submitQuiz(id, submitQuizDto, userId);
   }
 
   // GET /quizzes/:id/attempts - get user's quiz attempts (for progress tracking)
   @Get(':id/attempts')
-  async getUserAttempts(@Param('id', ParseIntPipe) id: number) {
-    return this.quizzesService.getUserAttempts(id);
+  async getUserAttempts(@Param('id', ParseIntPipe) id: number, @Request() req) {
+    const userId = req.user.userId;
+    return this.quizzesService.getUserAttempts(id, userId);
   }
 }
