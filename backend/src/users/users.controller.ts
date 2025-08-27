@@ -5,10 +5,50 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidationPipe } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../auth/admin.guard';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
+
+  // ===== SELF-MANAGEMENT ENDPOINTS (placed BEFORE :id routes to avoid conflicts) =====
+  // GET /users/profile - get own profile (Authenticated users)
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  async getOwnProfile(@Request() req) {
+    const userId = req.user.userId;
+    return this.usersService.getUserById(userId);
+  }
+
+  // PATCH /users/profile - update own profile (Authenticated users)
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile')
+  async updateOwnProfile(
+    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) updateUserDto: UpdateUserDto,
+    @Request() req
+  ) {
+    const userId = req.user.userId;
+    return this.usersService.updateUser(userId, updateUserDto);
+  }
+
+  // PATCH /users/profile/password - change own password
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile/password')
+  async changeOwnPassword(
+    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) body: ChangePasswordDto,
+    @Request() req
+  ) {
+    const userId = req.user.userId;
+    return this.usersService.changeOwnPassword(userId, body);
+  }
+
+  // DELETE /users/profile - delete own account (Authenticated users)
+  @UseGuards(JwtAuthGuard)
+  @Delete('profile')
+  async deleteOwnAccount(@Request() req) {
+    const userId = req.user.userId;
+    return this.usersService.deleteUser(userId);
+  }
 
   // GET /users - returns all users (Admin only)
   @UseGuards(JwtAuthGuard, AdminGuard)
@@ -64,34 +104,5 @@ export class UsersController {
     @Param('id', ParseIntPipe) id: number
   ) {
     return this.usersService.deleteUser(id);
-  }
-
-  // ===== SELF-MANAGEMENT ENDPOINTS =====
-  
-  // GET /users/profile - get own profile (Authenticated users)
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  async getOwnProfile(@Request() req) {
-    const userId = req.user.userId;
-    return this.usersService.getUserById(userId);
-  }
-
-  // PATCH /users/profile - update own profile (Authenticated users)
-  @UseGuards(JwtAuthGuard)
-  @Patch('profile')
-  async updateOwnProfile(
-    @Body(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })) updateUserDto: UpdateUserDto,
-    @Request() req
-  ) {
-    const userId = req.user.userId;
-    return this.usersService.updateUser(userId, updateUserDto);
-  }
-
-  // DELETE /users/profile - delete own account (Authenticated users)
-  @UseGuards(JwtAuthGuard)
-  @Delete('profile')
-  async deleteOwnAccount(@Request() req) {
-    const userId = req.user.userId;
-    return this.usersService.deleteUser(userId);
   }
 }

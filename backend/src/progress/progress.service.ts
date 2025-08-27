@@ -25,7 +25,7 @@ export class ProgressService {
 
   // Get progress for specific lesson
   async getLessonProgress(userId: number, lessonId: number) {
-    return this.prisma.userProgress.findUnique({
+    const progress = await this.prisma.userProgress.findUnique({
       where: {
         userId_lessonId: {
           userId,
@@ -41,6 +41,27 @@ export class ProgressService {
         },
       },
     });
+
+    if (progress) return progress;
+
+    // If no progress exists yet, return a default object with completed=false
+    const lesson = await this.prisma.lesson.findUnique({
+      where: { id: lessonId },
+      select: { id: true, title: true },
+    });
+
+    if (!lesson) {
+      return null; // let controller return 200 null or customize if needed
+    }
+
+    return {
+      id: undefined,
+      userId,
+      lessonId,
+      completed: false,
+      completedAt: null,
+      lesson,
+    } as unknown as any;
   }
 
   // Mark lesson as completed

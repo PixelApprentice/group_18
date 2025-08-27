@@ -87,6 +87,7 @@ Since admin creation is restricted for security, the initial admin user is creat
 |--------|--------------|--------------------|--------------|---------------|--------------------|----------------------------|
 | GET    | /users/profile| Get own profile     | Yes          | Any           | (none)             | `{ "id": 1, "email": "...", "name": "...", "role": "USER", "createdAt": "..." }` |
 | PATCH  | /users/profile| Update own profile  | Yes          | Any           | `{ "name": "New Name" }` | `{ "id": 1, "email": "...", "name": "New Name", "role": "USER", "createdAt": "..." }` |
+| PATCH  | /users/profile/password | Change own password | Yes | Any | `{ "currentPassword": "OldP@ss123", "newPassword": "NewStr0ngP@ss!" }` | `{ "success": true }` |
 | DELETE | /users/profile| Delete own account  | Yes          | Any           | (none)             | `{ "id": 1, "email": "...", "name": "...", "role": "USER", "createdAt": "..." }` |
 
 ### User Registration (Public)

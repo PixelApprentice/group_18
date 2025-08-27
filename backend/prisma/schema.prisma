@@ -23,6 +23,11 @@ model User {
   progress  UserProgress[]
   quizAttempts QuizAttempt[]
 }
+enum UserRole {
+  USER
+  ADMIN
+}
+
 
 model Lesson {
   id        Int      @id @default(autoincrement())
@@ -105,7 +110,3 @@ model QuizAttemptAnswer {
   question     QuizQuestion @relation(fields: [questionId], references: [id])
 }
 
-enum UserRole {
-  USER
-  ADMIN
-}

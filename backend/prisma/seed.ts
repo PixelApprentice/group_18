@@ -11,6 +11,11 @@ async function main() {
   // Get passwords from environment variables ONLY
   const adminPassword = process.env.ADMIN_PASSWORD;
   const userPassword = process.env.USER_PASSWORD;
+  // Also get seed emails and names from env (secure by avoiding hardcoded identifiers)
+  const adminEmail = process.env.ADMIN_EMAIL || 'admin@sekur.com';
+  const adminName = process.env.ADMIN_NAME || 'Admin User';
+  const userEmail = process.env.USER_EMAIL || 'user@sekur.com';
+  const userName = process.env.USER_NAME || 'Regular User';
   
   if (!adminPassword || !userPassword) {
     console.error('❌ Error: ADMIN_PASSWORD and USER_PASSWORD must be set in .env file');
@@ -24,11 +29,11 @@ async function main() {
   const hashedAdminPassword = await bcrypt.hash(adminPassword, 10);
   
   const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@sekur.com' },
+    where: { email: adminEmail },
     update: {},
     create: {
-      email: 'admin@sekur.com',
-      name: 'Admin User',
+      email: adminEmail,
+      name: adminName,
       password: hashedAdminPassword,
       role: 'ADMIN',
     },
@@ -40,11 +45,11 @@ async function main() {
   const hashedUserPassword = await bcrypt.hash(userPassword, 10);
   
   const regularUser = await prisma.user.upsert({
-    where: { email: 'user@sekur.com' },
+    where: { email: userEmail },
     update: {},
     create: {
-      email: 'user@sekur.com',
-      name: 'Regular User',
+      email: userEmail,
+      name: userName,
       password: hashedUserPassword,
       role: 'USER',
     },
@@ -53,8 +58,8 @@ async function main() {
   console.log('Regular user created:', regularUser);
   
   console.log('\n⚠️  IMPORTANT: Change these passwords after first login!');
-  console.log('Admin: admin@sekur.com');
-  console.log('User: user@sekur.com');
+  console.log(`Admin: ${adminEmail}`);
+  console.log(`User: ${userEmail}`);
 }
 
 main()

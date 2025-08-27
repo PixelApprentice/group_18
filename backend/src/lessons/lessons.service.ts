@@ -21,12 +21,45 @@ export class LessonsService {
 
   // Get a lesson by id, reading markdown content from disk
   async findOne(id: number) {
-    const lesson = await this.prisma.lesson.findUnique({ where: { id } });
+    const lesson = await this.prisma.lesson.findUnique({
+      where: { id },
+      select: { id: true, title: true, content: true },
+    });
     if (!lesson) throw new NotFoundException('Lesson not found');
-    // Use __dirname for robust path resolution to project root content folder
-    const markdownPath = join(__dirname, '..', '..', '..', 'content', lesson.content);
-    lesson.content = await fs.readFile(markdownPath, 'utf-8');
-    return lesson;
+    // Normalize provided content path to avoid duplicated 'content' segments
+    const normalizedContentFile = lesson.content.replace(/^[/\\]*content[/\\]*/i, '');
+
+    // Candidate paths to support different run contexts (ts-node vs compiled dist)
+    const candidatePaths = [
+      // Project root content (when running from backend, project root is one level up)
+      join(process.cwd(), '..', 'content', normalizedContentFile),
+      // Project root content from dist/src/* (__dirname typically backend/dist/src/lessons)
+      join(__dirname, '..', '..', '..', '..', 'content', normalizedContentFile),
+      // backend/content (optional alternative location)
+      join(process.cwd(), 'content', normalizedContentFile),
+      // backend/dist/content (fallback when packaged)
+      join(__dirname, '..', '..', '..', 'content', normalizedContentFile),
+    ];
+
+    let fileData: string | null = null;
+    let triedPaths: string[] = [];
+    for (const p of candidatePaths) {
+      triedPaths.push(p);
+      try {
+        fileData = await fs.readFile(p, 'utf-8');
+        break;
+      } catch (err) {
+        // continue trying next path
+      }
+    }
+
+    if (fileData == null) {
+      throw new NotFoundException(
+        `Lesson content file not found. Tried: ${triedPaths.join(' | ')}`,
+      );
+    }
+
+    return { id: lesson.id, title: lesson.title, content: fileData };
   }
 
   // Update a lesson by id
