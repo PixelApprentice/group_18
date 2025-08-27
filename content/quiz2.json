@@ -1,0 +1,22 @@
+{
+  "lessonId": 2,
+  "title": "SQL Injection Quiz",
+  "questions": [
+    {
+      "text": "What is the main risk of SQL Injection?",
+      "answers": [
+        { "text": "Database manipulation", "isCorrect": true },
+        { "text": "CSS styling issues", "isCorrect": false },
+        { "text": "Slow network", "isCorrect": false }
+      ]
+    },
+    {
+      "text": "How can you prevent SQL Injection?",
+      "answers": [
+        { "text": "Parameterized queries", "isCorrect": true },
+        { "text": "Using more JavaScript", "isCorrect": false },
+        { "text": "Disabling cookies", "isCorrect": false }
+      ]
+    }
+  ]
+}

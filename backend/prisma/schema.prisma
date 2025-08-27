@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  progress  UserProgress[]
+  quizAttempts QuizAttempt[]
+}
+enum UserRole {
+  USER
+  ADMIN
+}
+
+
+model Lesson {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String   // Path to markdown file or content
+  quizzes   Quiz[]
+  progress  UserProgress[]
+}
+
+model Quiz {
+  id        Int      @id @default(autoincrement())
+  lessonId  Int
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  title     String   // Quiz title
+  questions QuizQuestion[]
+  attempts  QuizAttempt[]
+}
+
+model QuizQuestion {
+  id        Int      @id @default(autoincrement())
+  quizId    Int
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  question  String
+  type      QuestionType @default(MULTIPLE_CHOICE)
+  answers   QuizAnswer[]
+  correctAnswer String? // For fill-in-blank and short answer questions
+  points    Int      @default(1) // Points for this question
+  attemptAnswers QuizAttemptAnswer[]
+}
+
+model QuizAnswer {
+  id         Int      @id @default(autoincrement())
+  questionId Int
+  question   QuizQuestion @relation(fields: [questionId], references: [id])
+  answer     String
+  isCorrect  Boolean
+  letter     String? // A, B, C, D for multiple choice
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  FILL_IN_BLANK
+  SHORT_ANSWER
+}
+
+model UserProgress {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  lessonId  Int
+  completed Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+  lesson    Lesson   @relation(fields: [lessonId], references: [id])
+
+  @@unique([userId, lessonId])
+}
+
+model QuizAttempt {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  quizId    Int
+  score     Int      @default(0)
+  maxScore  Int
+  completed Boolean  @default(false)
+  startedAt DateTime @default(now())
+  completedAt DateTime?
+  user      User     @relation(fields: [userId], references: [id])
+  quiz      Quiz     @relation(fields: [quizId], references: [id])
+  answers   QuizAttemptAnswer[]
+}
+
+model QuizAttemptAnswer {
+  id           Int      @id @default(autoincrement())
+  attemptId    Int
+  questionId   Int
+  userAnswer   String
+  isCorrect    Boolean
+  pointsEarned Int      @default(0)
+  attempt      QuizAttempt @relation(fields: [attemptId], references: [id])
+  question     QuizQuestion @relation(fields: [questionId], references: [id])
+}
+

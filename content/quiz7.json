@@ -1,0 +1,21 @@
+{
+  "lessonId": 7,
+  "filename": "quiz7.json",
+  "title": "New Quiz for Lesson 7",
+  "questions": [
+    {
+      "type": "multiple-choice",
+      "text": "What is the capital of France?",
+      "answers": [
+        {
+          "text": "Paris",
+          "isCorrect": true
+        },
+        {
+          "text": "London",
+          "isCorrect": false
+        }
+      ]
+    }
+  ]
+}

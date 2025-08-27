@@ -15,7 +15,7 @@ This platform aims to provide beginners and students with **practical cybersecur
 - 📚 Educational content on major web vulnerabilities  
 - ❓ Comprehension quizzes for each topic  
 - 🧪 Simulated hands-on challenges unlocked after quiz completion  
-- ⚙️ Built with Node.js backend, SQLite database, HTML/CSS/JS frontend  
+- ⚙️ Built with Nest.js backend, PostgreSQL & SQLite database, HTML/CSS/JS frontend  
 
 ---
 

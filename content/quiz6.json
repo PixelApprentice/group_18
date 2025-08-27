@@ -1,0 +1,20 @@
+{
+  "lessonId": 6,
+  "title": "API Testing Quiz",
+  "questions": [
+    {
+      "type": "multiple-choice",
+      "text": "Which HTTP method is used to create a resource?",
+      "answers": [
+        { "text": "GET", "isCorrect": false },
+        { "text": "POST", "isCorrect": true },
+        { "text": "DELETE", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "true-false",
+      "text": "PATCH is used to partially update a resource.",
+      "correctAnswer": true
+    }
+  ]
+}

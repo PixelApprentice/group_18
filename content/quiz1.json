@@ -1,0 +1,22 @@
+{
+  "lessonId": 1,
+  "title": "XSS Basics Quiz",
+  "questions": [
+    {
+      "text": "What does XSS stand for?",
+      "answers": [
+        { "text": "Cross-Site Scripting", "isCorrect": true },
+        { "text": "Extra Secure Sockets", "isCorrect": false },
+        { "text": "XML Site Security", "isCorrect": false }
+      ]
+    },
+    {
+      "text": "Which of the following is a common effect of XSS?",
+      "answers": [
+        { "text": "Stealing cookies", "isCorrect": true },
+        { "text": "Improving SEO", "isCorrect": false },
+        { "text": "Faster page loads", "isCorrect": false }
+      ]
+    }
+  ]
+}
