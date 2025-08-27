@@ -253,8 +253,18 @@ Since admin creation is restricted for security, the initial admin user is creat
 
 ---
 
-## User Progress Endpoints
+## Progress Endpoints
 
+| Method | Endpoint | Description | Auth Required | Valid Request | Example Successful Response |
+|--------|----------|-------------|---------------|---------------|------------------------------|
+| **GET** | `/progress` | Get user's progress across all lessons | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>[<br/>  {<br/>    "id": 1,<br/>    "userId": 1,<br/>    "lessonId": 1,<br/>    "completed": true,<br/>    "lesson": {<br/>      "id": 1,<br/>      "title": "Introduction to Cross-Site Scripting (XSS)"<br/>    }<br/>  },<br/>  {<br/>    "id": 2,<br/>    "userId": 1,<br/>    "lessonId": 2,<br/>    "completed": false,<br/>    "lesson": {<br/>      "id": 2,<br/>      "title": "SQL Injection Fundamentals"<br/>    }<br/>  }<br/>]``` |
+| **GET** | `/progress/:lessonId` | Get progress for specific lesson | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "id": 1,<br/>  "userId": 1,<br/>  "lessonId": 1,<br/>  "completed": true,<br/>  "lesson": {<br/>    "id": 1,<br/>    "title": "Introduction to Cross-Site Scripting (XSS)"<br/>  }<br/>}``` |
+| **POST** | `/progress/:lessonId/complete` | Mark lesson as completed | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "id": 1,<br/>  "userId": 1,<br/>  "lessonId": 1,<br/>  "completed": true<br/>}``` |
+| **GET** | `/progress/stats/overview` | Get user learning statistics | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "totalLessons": 7,<br/>  "completedLessons": 3,<br/>  "completionRate": 42.86,<br/>  "totalQuizzes": 7,<br/>  "completedQuizzes": 2,<br/>  "averageScore": 85.5<br/>}``` |
+| **GET** | `/progress/quizzes` | Get quiz progress for user | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>[<br/>  {<br/>    "id": 5,<br/>    "quizId": 1,<br/>    "quizTitle": "API Test Quiz",<br/>    "lessonId": 7,<br/>    "lessonTitle": "API Testing Lesson",<br/>    "score": 2,<br/>    "maxScore": 2,<br/>    "percentage": 100,<br/>    "completedAt": "2025-08-22T12:42:22.309Z",<br/>    "passed": true,<br/>    "attempts": 4<br/>  }<br/>]``` |
+| **GET** | `/progress/comprehensive` | Get comprehensive progress overview | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "lessons": [<br/>    {<br/>      "id": 2,<br/>      "userId": 3,<br/>      "lessonId": 2,<br/>      "completed": true,<br/>      "lesson": {<br/>        "id": 2,<br/>        "title": "Understanding SQL Injection"<br/>        }<br/>      }<br/>  ],<br/>  "quizzes": [<br/>    {<br/>      "id": 5,<br/>      "quizId": 1,<br/>      "quizTitle": "API Test Quiz",<br/>      "lessonId": 7,<br/>      "lessonTitle": "API Testing Lesson",<br/>      "score": 2,<br/>      "maxScore": 2,<br/>      "percentage": 100,<br/>      "completedAt": "2025-08-22T12:42:22.309Z",<br/>      "passed": true,<br/>      "attempts": 4<br/>    }<br/>  ],<br/>  "summary": {<br/>    "totalLessons": 3,<br/>    "completedLessons": 3,<br/>    "totalQuizzes": 1,<br/>    "passedQuizzes": 1,<br/>    "overallCompletion": 100<br/>  }<br/>}``` |
+
+---
 ### Get User Progress Across All Lessons
 
 **GET** `/progress`
@@ -412,7 +422,6 @@ Since admin creation is restricted for security, the initial admin user is creat
 }
 ```
 
----
 
 ## Complete Endpoint Summary
 
@@ -454,6 +463,7 @@ Since admin creation is restricted for security, the initial admin user is creat
 | GET | /progress/comprehensive | Get comprehensive progress | Yes |
 
 ---
+
 
 ## Key Concepts
 
