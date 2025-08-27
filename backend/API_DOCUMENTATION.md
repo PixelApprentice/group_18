@@ -54,27 +54,27 @@ Since admin creation is restricted for security, the initial admin user is creat
 
 ## Lesson Endpoints
 
-| Method | Endpoint           | Description                                 | Auth Required | Valid Request Body | Example Successful Response |
-|--------|--------------------|---------------------------------------------|--------------|--------------------|----------------------------|
-| POST   | /lessons           | Create a new lesson (markdown file path)    | No           | `{ "title": "Lesson Title", "content": "lesson1.en.md" }` | `{ "id": 1, "title": "Lesson Title", "content": "lesson1.en.md" }` |
-| GET    | /lessons           | Get all lessons                             | No           | (none)             | `[ { "id": 1, "title": "...", "content": "..." }, ... ]` |
-| GET    | /lessons/:id       | Get a lesson by ID (returns markdown text)  | No           | (none)             | `{ "id": 1, "title": "...", "content": "# Markdown..." }` |
-| PATCH  | /lessons/:id       | Update a lesson                             | No           | `{ "title": "New Title" }` | `{ "id": 1, "title": "New Title", "content": "..." }` |
-| DELETE | /lessons/:id       | Delete a lesson                             | No           | (none)             | `{ "id": 1, "title": "...", "content": "..." }` |
-| GET    | /lessons/:id/quiz  | Get the quiz for a lesson (from DB)         | No           | (none)             | See quiz response below    |
+| Method | Endpoint           | Description                                 | Auth Required | Role Required | Valid Request Body | Example Successful Response |
+|--------|--------------------|---------------------------------------------|--------------|---------------|--------------------|----------------------------|
+| POST   | /lessons           | Create a new lesson (markdown file path)    | Yes          | ADMIN         | `{ "title": "Lesson Title", "content": "lesson1.en.md" }` | `{ "id": 1, "title": "Lesson Title", "content": "lesson1.en.md" }` |
+| GET    | /lessons           | Get all lessons                             | No           | -             | (none)             | `[ { "id": 1, "title": "...", "content": "..." }, ... ]` |
+| GET    | /lessons/:id       | Get a lesson by ID (returns markdown text)  | No           | -             | (none)             | `{ "id": 1, "title": "...", "content": "# Markdown..." }` |
+| PATCH  | /lessons/:id       | Update a lesson                             | Yes          | ADMIN         | `{ "title": "New Title" }` | `{ "id": 1, "title": "New Title", "content": "..." }` |
+| DELETE | /lessons/:id       | Delete a lesson                             | Yes          | ADMIN         | (none)             | `{ "id": 1, "title": "...", "content": "..." }` |
+| GET    | /lessons/:id/quiz  | Get the quiz for a lesson (from DB)         | No           | -             | (none)             | See quiz response below    |
 
 ---
 
 ## Quiz Endpoints (Enhanced Database-Driven)
 
-| Method | Endpoint         | Description                                 | Auth Required | Valid Request Body | Example Successful Response |
-|--------|------------------|---------------------------------------------|--------------|--------------------|----------------------------|
-| POST   | /quizzes         | Create a quiz with mixed question types     | Yes          | See detailed format below | `{ "id": 1, "lessonId": 2, "title": "Quiz Title", "questions": [...] }` |
-| GET    | /quizzes/:id     | Get a quiz by quiz ID                       | Yes          | (none)             | See quiz response below    |
-| PATCH  | /quizzes/:id     | Update a quiz (title, questions, answers)   | Yes          | `{ "title": "New Title", "questions": [...] }` | See above                  |
-| DELETE | /quizzes/:id     | Delete a quiz                               | Yes          | (none)             | `{ "id": 1, "lessonId": 2, "title": "...", ... }` |
-| POST   | /quizzes/:id/submit | Submit quiz answers and get evaluation     | Yes          | `{ "quizId": 1, "answers": [...] }` | See submission response below |
-| GET    | /quizzes/:id/attempts | Get user's quiz attempts and scores        | Yes          | (none)             | `[ { "id": 1, "score": 8, "maxScore": 10, "completed": true, ... } ]` |
+| Method | Endpoint         | Description                                 | Auth Required | Role Required | Valid Request Body | Example Successful Response |
+|--------|------------------|---------------------------------------------|--------------|---------------|--------------------|----------------------------|
+| POST   | /quizzes         | Create a quiz with mixed question types     | Yes          | ADMIN         | See detailed format below | `{ "id": 1, "lessonId": 2, "title": "Quiz Title", "questions": [...] }` |
+| GET    | /quizzes/:id     | Get a quiz by quiz ID                       | Yes          | Any           | (none)             | See quiz response below    |
+| PATCH  | /quizzes/:id     | Update a quiz (title, questions, answers)   | Yes          | ADMIN         | `{ "title": "New Title", "questions": [...] }` | See above                  |
+| DELETE | /quizzes/:id     | Delete a quiz                               | Yes          | ADMIN         | (none)             | `{ "id": 1, "lessonId": 2, "title": "...", ... }` |
+| POST   | /quizzes/:id/submit | Submit quiz answers and get evaluation     | Yes          | Any           | `{ "quizId": 1, "answers": [...] }` | See submission response below |
+| GET    | /quizzes/:id/attempts | Get user's quiz attempts and scores        | Yes          | Any           | (none)             | `[ { "id": 1, "score": 8, "maxScore": 10, "completed": true, ... } ]` |
 
 ---
 
@@ -255,14 +255,14 @@ Since admin creation is restricted for security, the initial admin user is creat
 
 ## Progress Endpoints
 
-| Method | Endpoint | Description | Auth Required | Valid Request | Example Successful Response |
-|--------|----------|-------------|---------------|---------------|------------------------------|
-| **GET** | `/progress` | Get user's progress across all lessons | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>[<br/>  {<br/>    "id": 1,<br/>    "userId": 1,<br/>    "lessonId": 1,<br/>    "completed": true,<br/>    "lesson": {<br/>      "id": 1,<br/>      "title": "Introduction to Cross-Site Scripting (XSS)"<br/>    }<br/>  },<br/>  {<br/>    "id": 2,<br/>    "userId": 1,<br/>    "lessonId": 2,<br/>    "completed": false,<br/>    "lesson": {<br/>      "id": 2,<br/>      "title": "SQL Injection Fundamentals"<br/>    }<br/>  }<br/>]``` |
-| **GET** | `/progress/:lessonId` | Get progress for specific lesson | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "id": 1,<br/>  "userId": 1,<br/>  "lessonId": 1,<br/>  "completed": true,<br/>  "lesson": {<br/>    "id": 1,<br/>    "title": "Introduction to Cross-Site Scripting (XSS)"<br/>  }<br/>}``` |
-| **POST** | `/progress/:lessonId/complete` | Mark lesson as completed | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "id": 1,<br/>  "userId": 1,<br/>  "lessonId": 1,<br/>  "completed": true<br/>}``` |
-| **GET** | `/progress/stats/overview` | Get user learning statistics | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "totalLessons": 7,<br/>  "completedLessons": 3,<br/>  "completionRate": 42.86,<br/>  "totalQuizzes": 7,<br/>  "completedQuizzes": 2,<br/>  "averageScore": 85.5<br/>}``` |
-| **GET** | `/progress/quizzes` | Get quiz progress for user | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>[<br/>  {<br/>    "id": 5,<br/>    "quizId": 1,<br/>    "quizTitle": "API Test Quiz",<br/>    "lessonId": 7,<br/>    "lessonTitle": "API Testing Lesson",<br/>    "score": 2,<br/>    "maxScore": 2,<br/>    "percentage": 100,<br/>    "completedAt": "2025-08-22T12:42:22.309Z",<br/>    "passed": true,<br/>    "attempts": 4<br/>  }<br/>]``` |
-| **GET** | `/progress/comprehensive` | Get comprehensive progress overview | Yes (JWT Bearer Token) | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "lessons": [<br/>    {<br/>      "id": 2,<br/>      "userId": 3,<br/>      "lessonId": 2,<br/>      "completed": true,<br/>      "lesson": {<br/>        "id": 2,<br/>        "title": "Understanding SQL Injection"<br/>        }<br/>      }<br/>  ],<br/>  "quizzes": [<br/>    {<br/>      "id": 5,<br/>      "quizId": 1,<br/>      "quizTitle": "API Test Quiz",<br/>      "lessonId": 7,<br/>      "lessonTitle": "API Testing Lesson",<br/>      "score": 2,<br/>      "maxScore": 2,<br/>      "percentage": 100,<br/>      "completedAt": "2025-08-22T12:42:22.309Z",<br/>      "passed": true,<br/>      "attempts": 4<br/>    }<br/>  ],<br/>  "summary": {<br/>    "totalLessons": 3,<br/>    "completedLessons": 3,<br/>    "totalQuizzes": 1,<br/>    "passedQuizzes": 1,<br/>    "overallCompletion": 100<br/>  }<br/>}``` |
+| Method | Endpoint | Description | Auth Required | Role Required | Valid Request | Example Successful Response |
+|--------|----------|-------------|---------------|---------------|---------------|------------------------------|
+| **GET** | `/progress` | Get user's progress across all lessons | Yes (JWT Bearer Token) | Any | `Authorization: Bearer <jwt_token>` | ```json<br/>[<br/>  {<br/>    "id": 1,<br/>    "userId": 1,<br/>    "lessonId": 1,<br/>    "completed": true,<br/>    "lesson": {<br/>      "id": 1,<br/>      "title": "Introduction to Cross-Site Scripting (XSS)"<br/>    }<br/>  },<br/>  {<br/>    "id": 2,<br/>    "userId": 1,<br/>    "lessonId": 2,<br/>    "completed": false,<br/>    "lesson": {<br/>      "id": 2,<br/>      "title": "SQL Injection Fundamentals"<br/>    }<br/>  }<br/>]``` |
+| **GET** | `/progress/:lessonId` | Get progress for specific lesson | Yes (JWT Bearer Token) | Any | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "id": 1,<br/>  "userId": 1,<br/>  "lessonId": 1,<br/>  "completed": true,<br/>  "lesson": {<br/>    "id": 1,<br/>    "title": "Introduction to Cross-Site Scripting (XSS)"<br/>  }<br/>}``` |
+| **POST** | `/progress/:lessonId/complete` | Mark lesson as completed | Yes (JWT Bearer Token) | Any | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "id": 1,<br/>  "userId": 1,<br/>  "lessonId": 1,<br/>  "completed": true<br/>}``` |
+| **GET** | `/progress/stats/overview` | Get user learning statistics | Yes (JWT Bearer Token) | Any | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "totalLessons": 7,<br/>  "completedLessons": 3,<br/>  "completionRate": 42.86,<br/>  "totalQuizzes": 7,<br/>  "completedQuizzes": 2,<br/>  "averageScore": 85.5<br/>}``` |
+| **GET** | `/progress/quizzes` | Get quiz progress for user | Yes (JWT Bearer Token) | Any | `Authorization: Bearer <jwt_token>` | ```json<br/>[<br/>  {<br/>    "id": 5,<br/>    "quizId": 1,<br/>    "quizTitle": "API Test Quiz",<br/>    "lessonId": 7,<br/>    "lessonTitle": "API Testing Lesson",<br/>    "score": 2,<br/>    "maxScore": 2,<br/>    "percentage": 100,<br/>    "completedAt": "2025-08-22T12:42:22.309Z",<br/>    "passed": true,<br/>    "attempts": 4<br/>  }<br/>]``` |
+| **GET** | `/progress/comprehensive` | Get comprehensive progress overview | Yes (JWT Bearer Token) | Any | `Authorization: Bearer <jwt_token>` | ```json<br/>{<br/>  "lessons": [<br/>    {<br/>      "id": 2,<br/>      "userId": 3,<br/>      "lessonId": 2,<br/>      "completed": true,<br/>      "lesson": {<br/>        "id": 2,<br/>        "title": "Understanding SQL Injection"<br/>        }<br/>      }<br/>  ],<br/>  "quizzes": [<br/>    {<br/>      "id": 5,<br/>      "quizId": 1,<br/>      "quizTitle": "API Test Quiz",<br/>      "lessonId": 7,<br/>      "lessonTitle": "API Testing Lesson",<br/>      "score": 2,<br/>      "maxScore": 2,<br/>      "percentage": 100,<br/>      "completedAt": "2025-08-22T12:42:22.309Z",<br/>      "passed": true,<br/>      "attempts": 4<br/>    }<br/>  ],<br/>  "summary": {<br/>    "totalLessons": 3,<br/>    "completedLessons": 3,<br/>    "totalQuizzes": 1,<br/>    "passedQuizzes": 1,<br/>    "overallCompletion": 100<br/>  }<br/>}``` |
 
 ---
 ### Get User Progress Across All Lessons
