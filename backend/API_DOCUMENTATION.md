@@ -24,6 +24,58 @@ Since admin creation is restricted for security, the initial admin user is creat
 
 ---
 
+## Quick Testing Guide (Flow-Ordered Tables)
+
+### 1) Root Health Check
+| Method | Endpoint | Description | Auth Required | Role Required | Example Response |
+|--------|----------|-------------|---------------|---------------|------------------|
+| GET | / | API status check | No | - | `{ "message": "Welcome to SEKUR Platform API", "status": "running" }` |
+
+### 2) Onboarding and Auth
+| Method | Endpoint | Description | Auth Required | Role Required | Valid Request |
+|--------|----------|-------------|---------------|---------------|---------------|
+| POST | /users | Register new user | No | None | `{ "email":"user@example.com","name":"User","password":"StrongP@ssw0rd!" }` |
+| POST | /auth/login | Login to get JWT | No | None | `{ "email":"user@example.com","password":"StrongP@ssw0rd!" }` |
+| POST | /users/admin | Create admin user | Yes (JWT) | ADMIN | `{ "email":"admin@example.com","name":"Admin","password":"StrongP@ssw0rd!" }` |
+
+### 3) Public Content (No Auth)
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | /lessons | List lessons | No |
+| GET | /lessons/:id | Get lesson (markdown) | No |
+| GET | /lessons/:id/quiz | Get lesson's quiz | No |
+
+### 4) Authenticated User Actions (JWT Any)
+| Method | Endpoint | Description | Auth Required | Role Required | Valid Request |
+|--------|----------|-------------|---------------|---------------|---------------|
+| GET | /users/profile | Get own profile | Yes (JWT) | Any | - |
+| PATCH | /users/profile | Update own profile | Yes (JWT) | Any | `{ "name":"New Name" }` |
+| DELETE | /users/profile | Delete own account | Yes (JWT) | Any | - |
+| GET | /progress | User's lesson progress | Yes (JWT) | Any | - |
+| GET | /progress/:lessonId | Progress for lesson | Yes (JWT) | Any | - |
+| POST | /progress/:lessonId/complete | Mark lesson completed | Yes (JWT) | Any | - |
+| GET | /progress/stats/overview | Learning statistics | Yes (JWT) | Any | - |
+| GET | /progress/quizzes | Quiz progress | Yes (JWT) | Any | - |
+| GET | /progress/comprehensive | Lessons + quizzes overview | Yes (JWT) | Any | - |
+| GET | /quizzes/:id | Get quiz by ID | Yes (JWT) | Any | - |
+| POST | /quizzes/:id/submit | Submit quiz answers | Yes (JWT) | Any | `{ "quizId": 1, "answers": [...] }` |
+| GET | /quizzes/:id/attempts | My quiz attempts | Yes (JWT) | Any | - |
+
+### 5) Admin Actions (JWT ADMIN)
+| Method | Endpoint | Description | Auth Required | Role Required | Valid Request |
+|--------|----------|-------------|---------------|---------------|---------------|
+| GET | /users | Get all users | Yes (JWT) | ADMIN | - |
+| PATCH | /users/:id | Update any user | Yes (JWT) | ADMIN | `{ "name":"New Name", "role":"ADMIN" }` |
+| DELETE | /users/:id | Delete any user | Yes (JWT) | ADMIN | - |
+| POST | /lessons | Create lesson | Yes (JWT) | ADMIN | `{ "title":"Lesson","content":"lesson1.en.md" }` |
+| PATCH | /lessons/:id | Update lesson | Yes (JWT) | ADMIN | `{ "title":"New Title" }` |
+| DELETE | /lessons/:id | Delete lesson | Yes (JWT) | ADMIN | - |
+| POST | /quizzes | Create quiz | Yes (JWT) | ADMIN | See format below |
+| PATCH | /quizzes/:id | Update quiz | Yes (JWT) | ADMIN | See format below |
+| DELETE | /quizzes/:id | Delete quiz | Yes (JWT) | ADMIN | - |
+
+---
+
 ## User Endpoints
 
 | Method | Endpoint      | Description         | Auth Required | Valid Request Body | Example Successful Response |
