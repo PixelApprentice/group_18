@@ -1,20 +1,24 @@
 {
   "lessonId": 5,
-  "title": "Practice Quiz",
+  "title": "Practice — HTTP & Security Basics",
   "questions": [
     {
       "type": "multiple-choice",
-      "text": "Which HTTP method is used to update a resource?",
+      "text": "Which HTTP method is typically used to create a resource on the server?",
       "answers": [
         { "text": "GET", "isCorrect": false },
-        { "text": "PATCH", "isCorrect": true },
-        { "text": "DELETE", "isCorrect": false }
+        { "text": "POST", "isCorrect": true },
+        { "text": "PUT", "isCorrect": false }
       ]
     },
     {
-      "type": "true-false",
-      "text": "A 404 status means Not Found.",
-      "correctAnswer": true
+      "type": "multiple-choice",
+      "text": "Which status code means a resource was not found?",
+      "answers": [
+        { "text": "200", "isCorrect": false },
+        { "text": "404", "isCorrect": true },
+        { "text": "500", "isCorrect": false }
+      ]
     },
     {
       "type": "fill-in-the-blank",
@@ -22,9 +26,28 @@
       "correctAnswer": "HTTPS"
     },
     {
+      "type": "scenario",
+      "text": "You see a page that accepts user HTML and shows it raw. Which vulnerability is this likely to cause?",
+      "answers": [
+        { "text": "XSS", "isCorrect": true },
+        { "text": "CSRF", "isCorrect": false },
+        { "text": "SQL Injection", "isCorrect": false }
+      ]
+    },
+    {
       "type": "short-answer",
-      "text": "Name a common web vulnerability.",
-      "correctAnswer": "XSS"
+      "text": "Name one practical step to improve a web app's security (one short phrase).",
+      "correctAnswer": "use HTTPS"
+    }
+    ,
+    {
+      "type": "multiple-choice",
+      "text": "Level 2: Which header helps force browsers to use HTTPS for a site?",
+      "answers": [
+        { "text": "Strict-Transport-Security (HSTS)", "isCorrect": true },
+        { "text": "X-Powered-By", "isCorrect": false },
+        { "text": "Content-Type", "isCorrect": false }
+      ]
     }
   ]
 }

@@ -1,20 +1,47 @@
 {
   "lessonId": 7,
-  "filename": "quiz7.json",
-  "title": "New Quiz for Lesson 7",
+  "title": "Advanced Concepts — Final Quiz",
   "questions": [
     {
       "type": "multiple-choice",
-      "text": "What is the capital of France?",
+      "text": "Which of the following is the best short description of the principle of least privilege?",
       "answers": [
-        {
-          "text": "Paris",
-          "isCorrect": true
-        },
-        {
-          "text": "London",
-          "isCorrect": false
-        }
+        { "text": "Give users and services the minimum permissions they need", "isCorrect": true },
+        { "text": "Give everyone full access for simplicity", "isCorrect": false },
+        { "text": "Remove all permissions from everyone", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What does `HttpOnly` on a cookie do?",
+      "answers": [
+        { "text": "Prevents JavaScript from reading the cookie", "isCorrect": true },
+        { "text": "Makes the cookie visible to anyone", "isCorrect": false },
+        { "text": "Encrypts the cookie on disk", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "scenario",
+      "text": "You notice a dependency in your project has a known vulnerability. What should you do first?",
+      "answers": [
+        { "text": "Check for an updated version and plan an upgrade/test", "isCorrect": true },
+        { "text": "Ignore it — it's probably fine", "isCorrect": false },
+        { "text": "Publish the credentials to make it more visible", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "short-answer",
+      "text": "Name one header you can use to help mitigate XSS by limiting allowed script sources.",
+      "correctAnswer": "Content-Security-Policy"
+    }
+    ,
+    {
+      "type": "multiple-choice",
+      "text": "Level 2: Which of these helps ensure cookies are sent only over HTTPS?",
+      "answers": [
+        { "text": "The Secure cookie flag", "isCorrect": true },
+        { "text": "Content-Type header", "isCorrect": false },
+        { "text": "X-Frame-Options header", "isCorrect": false }
       ]
     }
   ]

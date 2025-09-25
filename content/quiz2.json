@@ -1,21 +1,55 @@
 {
   "lessonId": 2,
-  "title": "SQL Injection Quiz",
+  "title": "SQL Injection — Vault Quiz 🔐",
   "questions": [
     {
-      "text": "What is the main risk of SQL Injection?",
+      "type": "story",
+      "text": "Imagine a login form that directly builds a SQL query by joining strings. An attacker submits `' OR 1=1; --`. What is the attacker trying to do?",
       "answers": [
-        { "text": "Database manipulation", "isCorrect": true },
-        { "text": "CSS styling issues", "isCorrect": false },
-        { "text": "Slow network", "isCorrect": false }
+        { "text": "Make the database return all rows or bypass authentication", "isCorrect": true },
+        { "text": "Crash the browser", "isCorrect": false },
+        { "text": "Add styling to the page", "isCorrect": false }
       ]
     },
     {
-      "text": "How can you prevent SQL Injection?",
+      "type": "multiple-choice",
+      "text": "Which single change makes user input treated as data, not code?",
       "answers": [
-        { "text": "Parameterized queries", "isCorrect": true },
-        { "text": "Using more JavaScript", "isCorrect": false },
-        { "text": "Disabling cookies", "isCorrect": false }
+        { "text": "Parameterized queries / prepared statements", "isCorrect": true },
+        { "text": "Adding more HTML comments", "isCorrect": false },
+        { "text": "Using inline CSS", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "scenario",
+      "text": "True or False: Validating that a value is numeric is always enough to prevent SQL Injection.",
+      "answers": [
+        { "text": "False — validation helps but is not a full defense", "isCorrect": true },
+        { "text": "True — validation completely prevents SQLi", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "short-answer",
+      "text": "Your Turn: Name one extra server-side control (not input validation) you should use to limit damage from SQL injection.",
+      "correctAnswer": "least privilege"
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following is a helpful mitigation?",
+      "answers": [
+        { "text": "Using ORM and parameterized queries", "isCorrect": true },
+        { "text": "Relying only on client-side JavaScript", "isCorrect": false },
+        { "text": "Publishing database credentials publicly", "isCorrect": false }
+      ]
+    }
+    ,
+    {
+      "type": "multiple-choice",
+      "text": "Level 2: Why do parameterized queries stop SQL injection?",
+      "answers": [
+        { "text": "Because data is sent separately from the SQL command so it can't change SQL syntax", "isCorrect": true },
+        { "text": "Because they encrypt the database", "isCorrect": false },
+        { "text": "Because they block all user input", "isCorrect": false }
       ]
     }
   ]

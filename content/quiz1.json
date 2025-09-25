@@ -1,21 +1,54 @@
 {
   "lessonId": 1,
-  "title": "XSS Basics Quiz",
+  "title": "Script Attacks (XSS) — Friendly Quiz ✨",
   "questions": [
     {
-      "text": "What does XSS stand for?",
+      "type": "explanatory",
+      "text": "In one sentence, what is a script attack (XSS)?",
       "answers": [
-        { "text": "Cross-Site Scripting", "isCorrect": true },
-        { "text": "Extra Secure Sockets", "isCorrect": false },
-        { "text": "XML Site Security", "isCorrect": false }
+        { "text": "A way to inject code so other users' browsers run malicious scripts", "isCorrect": true },
+        { "text": "A technique to speed up JavaScript execution", "isCorrect": false }
       ]
     },
     {
-      "text": "Which of the following is a common effect of XSS?",
+      "type": "multiple-choice",
+      "text": "The 'audience sneaking a cue-card' analogy best describes which vulnerability?",
       "answers": [
-        { "text": "Stealing cookies", "isCorrect": true },
-        { "text": "Improving SEO", "isCorrect": false },
-        { "text": "Faster page loads", "isCorrect": false }
+        { "text": "CSRF", "isCorrect": false },
+        { "text": "XSS", "isCorrect": true },
+        { "text": "SQL Injection", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "scenario",
+      "text": "You see a comment on a page that contains `<script>alert('hi')</script>` and it runs when you open the page. This is likely:",
+      "answers": [
+        { "text": "Stored XSS", "isCorrect": true },
+        { "text": "Reflected XSS", "isCorrect": false },
+        { "text": "DOM-based XSS", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "short-answer",
+      "text": "Your Turn: Name one simple defense you can add to a page to reduce XSS risk.",
+      "correctAnswer": "Escape or encode output"
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which header helps limit which scripts can run on a page?",
+      "answers": [
+        { "text": "Content-Security-Policy (CSP)", "isCorrect": true },
+        { "text": "X-Frame-Options", "isCorrect": false },
+        { "text": "Cache-Control", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Level 2: If an attacker manages to run JavaScript in a victim's browser, which cookie setting stops JavaScript from reading the cookie?",
+      "answers": [
+        { "text": "HttpOnly", "isCorrect": true },
+        { "text": "SameSite", "isCorrect": false },
+        { "text": "Secure", "isCorrect": false }
       ]
     }
   ]
