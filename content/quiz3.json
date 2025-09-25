@@ -1,21 +1,69 @@
 {
   "lessonId": 3,
-  "title": "CSRF Quiz",
+  "title": "CSRF — The Unwanted Helper Quiz",
   "questions": [
     {
-      "text": "What does CSRF stand for?",
+      "type": "multiple-choice",
+      "text": "Why does CSRF rely on browser behavior?",
       "answers": [
-        { "text": "Cross-Site Request Forgery", "isCorrect": true },
-        { "text": "Client-Side Rendering Framework", "isCorrect": false },
-        { "text": "Cookie Session Randomization Factor", "isCorrect": false }
+        { "text": "Because browsers automatically include cookies and credentials for same-origin requests", "isCorrect": true },
+        { "text": "Because browsers block all cross-site requests", "isCorrect": false },
+        { "text": "Because servers always ask for user confirmation", "isCorrect": false }
       ]
     },
     {
-      "text": "A good defense against CSRF is:",
+      "type": "scenario",
+      "text": "An attacker builds a page that submits a hidden form to transfer money on your banking site. What is the best immediate defense?",
       "answers": [
-        { "text": "CSRF tokens", "isCorrect": true },
-        { "text": "Using only GET requests", "isCorrect": false },
-        { "text": "Disabling JavaScript", "isCorrect": false }
+        { "text": "Validate an anti-CSRF token on the transfer endpoint", "isCorrect": true },
+        { "text": "Disable cookies for all users", "isCorrect": false },
+        { "text": "Block all POST requests", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "true-false",
+      "text": "Setting cookies to `SameSite=Strict` can reduce CSRF risk.",
+      "correctAnswer": true
+    },
+    {
+      "type": "short-answer",
+      "text": "Name one additional header you can check server-side to help detect cross-site requests.",
+      "correctAnswer": "Origin"
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which SameSite cookie value will still allow typical navigation from external sites but protects some CSRF cases?",
+      "answers": [
+        { "text": "Strict", "isCorrect": false },
+        { "text": "Lax", "isCorrect": true },
+        { "text": "None", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "scenario",
+      "text": "True or False: Relying only on client-side JavaScript checks is a safe way to prevent CSRF.",
+      "answers": [
+        { "text": "False — server-side checks are required", "isCorrect": true },
+        { "text": "True — client-side checks are enough", "isCorrect": false }
+      ]
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which action should require an extra confirmation even if the request looks valid?",
+      "answers": [
+        { "text": "Money transfers or changing email address", "isCorrect": true },
+        { "text": "Viewing public blog posts", "isCorrect": false },
+        { "text": "Changing theme color", "isCorrect": false }
+      ]
+    }
+    ,
+    {
+      "type": "multiple-choice",
+      "text": "Level 2: When checking `Origin`/`Referer` headers for CSRF defense, what should you be mindful of?",
+      "answers": [
+        { "text": "Some browsers or requests may omit these headers, so use as part of a layered defense", "isCorrect": true },
+        { "text": "They are always present and fully reliable", "isCorrect": false },
+        { "text": "They encrypt the request body", "isCorrect": false }
       ]
     }
   ]

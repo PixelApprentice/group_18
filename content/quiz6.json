@@ -16,5 +16,15 @@
       "text": "PATCH is used to partially update a resource.",
       "correctAnswer": true
     }
+    ,
+    {
+      "type": "multiple-choice",
+      "text": "Level 2: When testing APIs, which of the following is an important authorization check to implement?",
+      "answers": [
+        { "text": "Verify the requesting user is the owner of the resource", "isCorrect": true },
+        { "text": "Allow all authenticated users to edit any resource", "isCorrect": false },
+        { "text": "Base access only on client-side flags", "isCorrect": false }
+      ]
+    }
   ]
 }
