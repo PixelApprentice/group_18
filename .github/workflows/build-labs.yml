@@ -1,0 +1,25 @@
+name: Build labs
+
+on:
+  push:
+    branches: [ 'SEKUR-Labs', 'main' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Verify docker
+        run: |
+          docker --version || true
+          docker buildx version || true
+      - name: Build lab images
+        run: |
+          docker buildx build --load -t sql-injection-lab:ci ./labs/sql-injection
+          docker buildx build --load -t xss-stored-lab:ci ./labs/xss-stored
+          docker buildx build --load -t broken-auth-lab:ci ./labs/broken-auth
+          docker buildx build --load -t idor-lab:ci ./labs/idor
