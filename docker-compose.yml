@@ -1,0 +1,61 @@
+version: '3.8'
+services:
+  nest:
+    image: node:20
+    working_dir: /usr/src/app
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    command: sh -lc "cd /usr/src/app && npm install --silent && npm run start:dev"
+    networks:
+      - sekur-net
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - nest
+      - lab_sql_injection
+    networks:
+      - sekur-net
+
+  lab_sql_injection:
+    build:
+      context: ./labs/sql-injection
+    ports:
+      - "3001:3001"
+    networks:
+      - sekur-net
+
+  lab_xss_stored:
+    build:
+      context: ./labs/xss-stored
+    ports:
+      - "3002:3002"
+    networks:
+      - sekur-net
+
+  lab_broken_auth:
+    build:
+      context: ./labs/broken-auth
+    ports:
+      - "3003:3003"
+    networks:
+      - sekur-net
+
+  lab_idor:
+    build:
+      context: ./labs/idor
+    ports:
+      - "3004:3004"
+    networks:
+      - sekur-net
+
+networks:
+  sekur-net:
+    driver: bridge

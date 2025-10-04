@@ -1,0 +1,30 @@
+services:
+  lab_sql_injection:
+    environment:
+      - DB_FILE=/data/sql-injection.db
+    volumes:
+      - lab_sql_injection_data:/data
+
+  lab_xss_stored:
+    environment:
+      - DB_FILE=/data/xss.db
+    volumes:
+      - lab_xss_stored_data:/data
+
+  lab_broken_auth:
+    environment:
+      - DB_FILE=/data/broken_auth.db
+    volumes:
+      - lab_broken_auth_data:/data
+
+  lab_idor:
+    environment:
+      - DB_FILE=/data/idor.db
+    volumes:
+      - lab_idor_data:/data
+
+volumes:
+  lab_sql_injection_data:
+  lab_xss_stored_data:
+  lab_broken_auth_data:
+  lab_idor_data:

@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Broken Auth Lab</title>
+    <link rel="icon" href="data:image/x-icon;,">
+  </head>
+  <body>
+    <h1>Broken Authentication Lab</h1>
+    <div style="background:#fff8f0;border:1px solid #ffd0b3;padding:10px;margin-bottom:12px">
+      <strong>Goal:</strong> Explore common authentication mistakes: plaintext passwords and predictable flows.
+      <br />
+      <strong>Hint:</strong> Try the sample account <code>victim</code> with password <code>guessme</code> in the login form.
+      <div style="margin-top:6px;color:#444">Expected: logging in displays a green success banner. If you enter a wrong username you'll see a 'User not found' message.</div>
+    </div>
+    <% if (typeof success !== 'undefined' && success) { %>
+      <div style="background:#e6ffe6;border:1px solid #4caf50;padding:8px;margin-bottom:8px">SUCCESS: Login accepted. You have an authenticated session (insecure storage used for demonstration).</div>
+    <% } %>
+    <% if (!user) { %>
+      <% if (message) { %><p style="color:red"><%= message %></p><% } %>
+      <form method="post" action="/lab/broken-auth/login">
+        <input name="username" placeholder="username" />
+        <input name="password" placeholder="password" />
+        <button type="submit">Login</button>
+      </form>
+    <% } else { %>
+      <p>Welcome, <%= user.username %></p>
+      <form method="post" action="/lab/broken-auth/logout"><button>Logout</button></form>
+    <% } %>
+    <hr />
+    <p>Hint: passwords are stored in plaintext in this lab.</p>
+  </body>
+</html>
