@@ -1,0 +1,40 @@
+services:
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - lab_sql_injection
+      - lab_xss_stored
+      - lab_broken_auth
+      - lab_idor
+
+  lab_sql_injection:
+    build:
+      context: ./labs/sql-injection
+    ports:
+      - "3001:3001"
+
+  lab_xss_stored:
+    build:
+      context: ./labs/xss-stored
+    ports:
+      - "3002:3002"
+
+  lab_broken_auth:
+    build:
+      context: ./labs/broken-auth
+    ports:
+      - "3003:3003"
+
+  lab_idor:
+    build:
+      context: ./labs/idor
+    ports:
+      - "3004:3004"
+
+networks:
+  default:
+    external: false

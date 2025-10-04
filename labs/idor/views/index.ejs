@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8"/><title>IDOR Lab</title></head>
+  <body>
+    <h1>IDOR Lab</h1>
+    <div style="background:#f6ffef;border:1px solid #bff0c7;padding:10px;margin-bottom:12px">
+      <strong>Goal:</strong> See how missing authorization checks allow access to other users' resources.
+      <br />
+      <strong>Hint:</strong> Click a note id for a different owner (for example a note owned by <code>victim</code>) — if you can see it, the lab demonstrates an IDOR.
+      <div style="margin-top:6px;color:#444">Expected: viewing another user's note shows a green success banner.</div>
+      </div>
+      <div style="background:#fff8f0;border:1px solid #ffd0b3;padding:10px;margin-bottom:12px">
+        <strong>Goal:</strong> Demonstrate an Insecure Direct Object Reference: the app allows viewing notes by id without checking ownership.
+        <br />
+        <strong>Hint:</strong> Try opening a note that isn't yours by changing the numeric id in the URL (e.g. /lab/idor/note/3). Look for the success banner.
+        <div style="margin-top:6px;color:#444">Expected: you'll be able to view another user's private note. Fix: add an ownership check (compare note.ownerId to the logged-in user).</div>
+      </div>
+    <ul>
+      <% notes.forEach(function(n){ %>
+  <li><a href="/lab/idor/note/<%= n.id %>">Note <%= n.id %> (owner: <%= n.owner %>)</a></li>
+      <% }) %>
+    </ul>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+name: Build labs
+
+on:
+  push:
+    branches: [ 'SEKUR-Labs', 'main' ]
+
+jobs:
+  build:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Verify docker
+        run: |
+          docker --version || true
+          docker buildx version || true
+      - name: Build lab images
+        run: |
+          set -e
+          for d in ./labs/sql-injection ./labs/xss-stored ./labs/broken-auth ./labs/idor; do
+            echo "\n== Building $d with buildx =="
+            # explicitly pass Dockerfile path and context to avoid path resolution issues in runners
+            if docker buildx build --load -t "${d##*/}-lab:ci" -f "$d/Dockerfile" "$d"; then
+              echo "buildx succeeded for $d"
+              continue
+            fi
+            echo "buildx failed for $d; falling back to docker build"
+            if docker build -t "${d##*/}-lab:ci" -f "$d/Dockerfile" "$d"; then
+              echo "docker build succeeded for $d"
+              continue
+            fi
+            echo "Both buildx and docker build failed for $d" >&2
+            exit 1
+          done

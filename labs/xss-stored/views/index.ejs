@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Stored XSS Lab</title>
+    <link rel="icon" href="data:image/x-icon;,">
+    <style>body{font-family:Arial;padding:20px}textarea{width:400px;height:80px}</style>
+  </head>
+  <body>
+    <h1>Stored XSS Lab</h1>
+    <div style="background:#fff8e1;border:1px solid #ffe58f;padding:10px;margin-bottom:12px">
+      <strong>Goal:</strong> See how storing unescaped user input can lead to executable scripts when the page renders comments.
+      <br />
+  <strong>Hint:</strong> Try posting: <code>&lt;script&gt;console.log('XSS')&lt;/script&gt;</code>
+  <div style="margin-top:6px;color:#444">Expected: an amber banner appears confirming the comment contained executable HTML and you should see the raw HTML in the comments list. Note: using <code>alert()</code> will create a browser popup — to avoid annoying popups while experimenting, prefer <code>console.log()</code> or visible HTML like <code>&lt;span style="color:red"&gt;XSS&lt;/span&gt;</code>.</div>
+    </div>
+    <% if (typeof success !== 'undefined' && success) { %>
+      <div style="background:#fff3cd;border:1px solid #ffe08a;padding:8px;margin-bottom:8px">SUCCESS: Your comment contained executable HTML (e.g. a &lt;script&gt; tag). This lab intentionally displays raw content.</div>
+    <% } %>
+  <form action="/lab/xss-stored/comment" method="post">
+      <input name="author" placeholder="your name" /> <br /><br />
+      <textarea name="content" placeholder="your comment"></textarea><br />
+      <button type="submit">Post comment</button>
+    </form>
+
+    <h3>Recent comments</h3>
+    <% comments.forEach(function(c){ %>
+      <div style="border:1px solid #ddd;padding:8px;margin:6px 0">
+        <strong><%= c.author %></strong>
+        <div><%- c.content %></div>
+      </div>
+    <% }) %>
+  </body>
+ </html>
