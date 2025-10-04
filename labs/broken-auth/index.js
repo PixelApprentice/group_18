@@ -5,6 +5,8 @@ const session = require('express-session');
 const path = require('path');
 
 const app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(session({ secret: 'insecure-secret', resave: false, saveUninitialized: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
