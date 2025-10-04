@@ -23,12 +23,13 @@ jobs:
           set -e
           for d in ./labs/sql-injection ./labs/xss-stored ./labs/broken-auth ./labs/idor; do
             echo "\n== Building $d with buildx =="
-            if docker buildx build --load -t "${d##*/}-lab:ci" "$d"; then
+            # explicitly pass Dockerfile path and context to avoid path resolution issues in runners
+            if docker buildx build --load -t "${d##*/}-lab:ci" -f "$d/Dockerfile" "$d"; then
               echo "buildx succeeded for $d"
               continue
             fi
             echo "buildx failed for $d; falling back to docker build"
-            if docker build -t "${d##*/}-lab:ci" "$d"; then
+            if docker build -t "${d##*/}-lab:ci" -f "$d/Dockerfile" "$d"; then
               echo "docker build succeeded for $d"
               continue
             fi

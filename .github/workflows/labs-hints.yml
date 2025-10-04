@@ -11,9 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Docker Compose
+      - name: Set up Docker Compose (tolerant)
         run: |
-          sudo apt-get update -y && sudo apt-get install -y docker-compose-plugin docker.io
+          # Try apt install but don't fail the job if the package name isn't available on runner
+          sudo apt-get update -y || true
+          sudo apt-get install -y docker.io docker-compose-plugin || true
+          # If docker isn't available, install via the official convenience script
+          if ! command -v docker >/dev/null 2>&1; then
+            echo "docker not found; installing via get.docker.com"
+            curl -fsSL https://get.docker.com | sh
+          fi
       - name: Verify docker compose
         run: |
           docker --version || true
