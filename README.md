@@ -49,9 +49,9 @@ This platform aims to provide beginners and students with **practical cybersecur
 
 - **Simplicity and Clarity:** Our content breaks down complex cybersecurity concepts into easy-to-understand explanations, making it beginner-friendly.  
 - **User-Friendly Experience:** The platform combines learning and practice seamlessly, unlocking challenges only after users demonstrate understanding via quizzes.  
-- **Localized Accessibility:** We plan to provide educational materials in **Amharic and other Ethiopian local languages** to make cybersecurity education accessible to a broader audience.  (Future Plan)
-- **Focused on Practical Skills:** Unlike many platforms that focus solely on theory, SEKUR emphasizes hands-on simulations of real-world vulnerabilities in a safe environment.  
-- **Open and Expandable:** Designed to grow with community contributions and feature additions like AI chatbots,supporting local languages, leaderboards, and certificates. 
+ - **Localized Accessibility:** We plan to provide educational materials in **Amharic and other Ethiopian local languages** to make cybersecurity education accessible to a broader audience.  (Future Plan)
+ - **Focused on Practical Skills:** Unlike many platforms that focus solely on theory, SEKUR emphasizes hands-on simulations of real-world vulnerabilities in a safe environment.  
+ - **Open and Expandable:** Designed to grow with community contributions and feature additions like supporting local languages, leaderboards, and certificates. 
 
 ---
 
@@ -60,7 +60,7 @@ This platform aims to provide beginners and students with **practical cybersecur
 - Add challenge pages for all OWASP Top 10
 - User accounts with saved progress
 - Scoreboard and leaderboard
-- AI chatbot to answer students' security questions
+ - Optional integrations (chat, feedback) may be added later
 - Certificates/badges for completion
 - **Localization of educational content in Amharic and other Ethiopian local languages** 
 

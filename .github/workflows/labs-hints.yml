@@ -1,0 +1,35 @@
+name: Labs smoke-tests
+
+on:
+  push:
+    branches: ["SEKUR-Labs"]
+  pull_request:
+    branches: ["SEKUR-Labs"]
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get update -y && sudo apt-get install -y docker-compose-plugin docker.io
+      - name: Start labs compose
+        run: |
+          docker compose -f docker-compose.labs.yml up --build -d
+      - name: Wait for health
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost/lab/sql-injection/health >/dev/null && curl -s http://localhost/lab/xss-stored/health >/dev/null && curl -s http://localhost/lab/broken-auth/health >/dev/null && curl -s http://localhost/lab/idor/health >/dev/null; then
+              echo "services up"; break
+            fi
+            sleep 2
+          done
+      - name: Run hint smoke tests
+        run: |
+          chmod +x ./scripts/smoke-test-hints.sh
+          ./scripts/smoke-test-hints.sh
+      - name: Tear down
+        if: always()
+        run: |
+          docker compose -f docker-compose.labs.yml down --volumes

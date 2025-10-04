@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>SQL Injection Lab</title>
+    <!-- inline tiny transparent favicon to prevent browsers requesting /favicon.ico -->
+    <link rel="icon" href="data:image/x-icon;,">
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; }
+      input[type=text] { width: 300px }
+      table { border-collapse: collapse; margin-top: 12px }
+      td, th { border: 1px solid #ddd; padding: 6px }
+    </style>
+  </head>
+  <body>
+    <h1>SQL Injection Lab</h1>
+    <div style="background:#f0f8ff;border:1px solid #b3d7ff;padding:10px;margin-bottom:12px">
+      <strong>Goal:</strong> Learn why unparameterized SQL queries are dangerous. Try to retrieve as many users as possible using the search box.
+      <br />
+      <strong>Hint:</strong> Try the payload: <code>' OR '1'='1</code>
+      <div style="margin-top:6px;color:#444">Expected: the results table returns more rows than a normal search and a green success banner appears.</div>
+    </div>
+    <p>Try searching for users. This lab is intentionally vulnerable.</p>
+  <div style="background:#fffef6;border:1px solid #f0e6b3;padding:8px;margin:10px 0">
+    <strong>Why this works:</strong> the lab concatenates the search string into an SQL WHERE clause without parameterization, so a payload like <code>' OR '1'='1</code> changes the logic to always be true and returns many rows.
+    <br />
+    <strong>Fix:</strong> use parameterized queries/prepared statements (never directly interpolate user input into SQL) or an ORM that parameterizes inputs.
+  </div>
+  <form action="/lab/sql-injection/search" method="get">
+      <input type="text" name="q" value="<%= query %>" placeholder="search username or email" />
+      <button type="submit">Search</button>
+    </form>
+
+    <% if (results) { %>
+      <% if (typeof success !== 'undefined' && success) { %>
+        <div style="background:#e6ffe6;border:1px solid #4caf50;padding:8px;margin-bottom:8px">SUCCESS: You triggered the injection and saw more than expected users.</div>
+      <% } %>
+      <% if (typeof warning !== 'undefined' && warning) { %>
+        <div style="background:#fff4e6;border:1px solid #ffcc99;padding:8px;margin-bottom:8px;color:#6a4b00">WARNING: <%= warning %></div>
+      <% } %>
+      <h3>Results</h3>
+      <% if (results.length === 0) { %>
+        <p><em>No results found.</em></p>
+      <% } %>
+      <table>
+        <tr><th>id</th><th>username</th><th>email</th></tr>
+        <% results.forEach(function(r){ %>
+          <tr>
+            <td><%= r.id %></td>
+            <td><%= r.username %></td>
+            <td><%= r.email %></td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } %>
+
+    <hr />
+    <h4>Hint</h4>
+    <p>Try <code>' OR '1'='1</code> in the search box to see why parameterized queries are important.</p>
+  </body>
+ </html>
