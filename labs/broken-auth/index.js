@@ -5,20 +5,24 @@ const session = require('express-session');
 const path = require('path');
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(session({ secret: 'insecure-secret', resave: false, saveUninitialized: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-const db = new sqlite3.Database(':memory:');
-db.serialize(() => {
-  db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)');
-  db.run('DELETE FROM users');
-  const stmt = db.prepare('INSERT INTO users (username, password) VALUES (?, ?)');
-  stmt.run('alice', 'password123');
-  stmt.run('bob', 'qwerty');
-  stmt.run('victim', 'guessme');
-  stmt.finalize();
+const DBSOURCE = process.env.DB_FILE || ':memory:';
+const db = new sqlite3.Database(DBSOURCE, (err) => {
+  if (err) {
+    console.error(err.message);
+    throw err;
+  }
+  db.serialize(() => {
+    db.run('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)');
+    db.run('DELETE FROM users');
+    const stmt = db.prepare('INSERT INTO users (username, password) VALUES (?, ?)');
+    stmt.run('alice', 'password123');
+    stmt.run('bob', 'qwerty');
+    stmt.run('victim', 'guessme');
+    stmt.finalize();
+  });
 });
 
 app.get('/', (req, res) => {
@@ -61,4 +65,4 @@ app.post('/logout', (req, res) => {
 app.get('/health', (req, res) => res.send('ok'));
 
 const port = process.env.PORT || 3003;
-app.listen(port, () => console.log(`Broken auth lab listening on ${port}`));
+app.listen(port, () => console.log(`Broken auth lab listening on ${port} (DB=${DBSOURCE})`));
