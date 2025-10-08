@@ -1,10 +1,10 @@
 "use client"
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import SidebarTutorial from '../../components/sidebar-tutorial'
 import { LabProgress } from '../../lib/progress'
 
-export default function IDORPage() {
+function IDORContent() {
   const searchParams = useSearchParams()
   const [docId, setDocId] = useState('123')
   const [warning, setWarning] = useState<string | null>(null)
@@ -121,5 +121,13 @@ export default function IDORPage() {
         <SidebarTutorial title="IDOR" lab="idor" />
       </aside>
     </div>
+  )
+}
+
+export default function IDORPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+      <IDORContent />
+    </Suspense>
   )
 }
