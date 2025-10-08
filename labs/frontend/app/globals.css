@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #1a1a1a;
+  --fg: #ffffff;
+  --cyan: #00d4ff;
+  --warn: #ef4444;
+  --success: #22c55e;
+}
+
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(180deg, rgba(26,26,26,1) 0%, rgba(16,16,16,1) 100%);
+  color: var(--fg);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue";
+}
+
+.card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+
+.btn {
+  background: linear-gradient(90deg, rgba(0,212,255,0.04), rgba(0,212,255,0.02));
+  color: var(--cyan);
+  border: 1px solid rgba(0,212,255,0.12);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,212,255,0.06); }
+
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+/* basic responsive helpers */
+@media (max-width: 640px) {
+  .grid-cols-4-mobile { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stack-sm { display: flex; flex-direction: column; }
+  .stack-sm > * { width: 100%; }
+}
+
+/* theme-aware accent helpers */
+.text-cyanAccent { color: var(--cyan); }
+.bg-cyanAccent { background-color: rgba(0,212,255,0.08); }
+.border-cyanAccent { border-color: rgba(0,212,255,0.12); }
+
+/* Light theme overrides */
+[data-theme="light"] {
+  --bg: #ffffff;
+  --fg: #0b1220;
+  --cyan: #007ea7;
+  --warn: #dc2626;
+  --success: #16a34a;
+}
+
+[data-theme="light"] body {
+  background: linear-gradient(180deg, #ffffff 0%, #f7f9fb 100%);
+  color: var(--fg);
+}
+
+[data-theme="light"] .card {
+  background: rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .btn {
+  background: linear-gradient(90deg, rgba(0,126,167,0.08), rgba(0,126,167,0.04));
+  color: var(--cyan);
+  border: 1px solid rgba(0,126,167,0.2);
+}
+
+[data-theme="light"] .text-white\/60 {
+  color: rgba(11,18,32,0.6) !important;
+}
+
+[data-theme="light"] .text-white\/80 {
+  color: rgba(11,18,32,0.8) !important;
+}
+
+[data-theme="light"] .border-white\/6 {
+  border-color: rgba(0,0,0,0.1) !important;
+}
