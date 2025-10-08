@@ -1,7 +1,16 @@
+"use client"
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
 import Progress from '../components/progress'
+import { LabProgress } from '../lib/progress'
 
-function LabCard({ title, href, icon }: { title: string; href: string; icon: string }) {
+function LabCard({ title, href, icon, labId }: { title: string; href: string; icon: string; labId: string }) {
+  const [isCompleted, setIsCompleted] = useState(false)
+
+  useEffect(() => {
+    setIsCompleted(LabProgress.isComplete(labId))
+  }, [labId])
+
   return (
     <div className="card">
       <div className="flex items-start justify-between">
@@ -13,9 +22,11 @@ function LabCard({ title, href, icon }: { title: string; href: string; icon: str
           </div>
         </div>
         <div className="flex flex-col items-end gap-2 sm:items-end">
-          <div className="text-sm text-white/60">0/1 completed</div>
-          <Progress value={0} />
-          <Link href={href} className="btn w-full sm:w-auto text-center">Start Lab</Link>
+          <div className="text-sm text-white/60">{isCompleted ? '1/1 completed ✅' : '0/1 completed'}</div>
+          <Progress value={isCompleted ? 100 : 0} />
+          <Link href={href} className="btn w-full sm:w-auto text-center">
+            {isCompleted ? 'Review Lab' : 'Start Lab'}
+          </Link>
         </div>
       </div>
     </div>
@@ -34,10 +45,10 @@ export default function Page() {
 
       <section>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <LabCard title="SQL Injection" href="/sql-injection" icon="🛡️" />
-        <LabCard title="Cross-Site Scripting" href="/xss" icon="💬" />
-        <LabCard title="Broken Authentication" href="/broken-auth" icon="🔐" />
-        <LabCard title="Insecure Direct Object Reference" href="/idor" icon="📄" />
+        <LabCard title="SQL Injection" href="/sql-injection" icon="🛡️" labId="sql-injection" />
+        <LabCard title="Cross-Site Scripting" href="/xss" icon="💬" labId="xss" />
+        <LabCard title="Broken Authentication" href="/broken-auth" icon="🔐" labId="broken-auth" />
+        <LabCard title="Insecure Direct Object Reference" href="/idor" icon="📄" labId="idor" />
       </div>
         </section>
     </div>

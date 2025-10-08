@@ -1,6 +1,7 @@
 "use client"
 import SidebarTutorial from '../../components/sidebar-tutorial'
 import { useState } from 'react'
+import { LabProgress } from '../../lib/progress'
 
 function Comment({ avatar, user, time, children }: any) {
   return (
@@ -20,12 +21,25 @@ export default function XSSPage() {
     { id: 2, user: 'mallory', time: '1d', text: 'Nice post!' }
   ])
   const [alert, setAlert] = useState<string| null>(null)
+  const [xssTriggered, setXssTriggered] = useState(false)
 
   function postComment(text: string) {
-    // Simulate detection of script-like content
-    if (text.includes('<script') || text.includes('javascript:')) {
-      setAlert('XSS-like content detected (simulated). Review payload in tutorial.');
+    // Simulate XSS detection and execution
+    if (text.includes('<script') || text.includes('javascript:') || text.includes('alert(') || text.includes('onerror=')) {
+      setAlert('🎉 XSS Attack Successful! Lab completed - Script would execute in real application.');
+      setXssTriggered(true)
+      LabProgress.markComplete('xss')
+      
+      // Simulate script execution (safely)
+      if (text.includes('alert(')) {
+        setTimeout(() => {
+          window.alert('XSS Demo: This would be a malicious script execution!')
+        }, 500)
+      }
+    } else if (text.includes('<') || text.includes('>')) {
+      setAlert('HTML detected but not dangerous. Try script tags or event handlers.')
     }
+    
     setComments(c => [{ id: Date.now(), user: 'you', time: 'now', text }, ...c])
   }
 
@@ -33,7 +47,19 @@ export default function XSSPage() {
     <div className="grid grid-cols-3 gap-6">
       <div className="col-span-2">
         <div className="card mb-4">
+          <div className="text-sm text-white/60">Labs / Cross-Site Scripting (XSS)</div>
           <h2 className="text-xl font-semibold">Community Forum</h2>
+          <div className="mt-2 text-sm text-white/70">
+            <p className="mb-2">
+              <strong>What is XSS?</strong> Cross-Site Scripting allows attackers to inject malicious scripts into web pages viewed by other users.
+            </p>
+            <p className="mb-2">
+              <strong>How it works:</strong> When user input isn't properly sanitized, attackers can insert JavaScript code that executes in victims' browsers.
+            </p>
+            <p>
+              <strong>Real-world impact:</strong> Steal cookies, hijack sessions, redirect users, or perform actions on their behalf.
+            </p>
+          </div>
         </div>
 
         <div className="card">

@@ -1,7 +1,8 @@
 "use client"
 import SidebarTutorial from '../../components/sidebar-tutorial'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Modal from '../../components/modal'
+import { LabProgress } from '../../lib/progress'
 
 export default function SQLPage() {
   const [query, setQuery] = useState('')
@@ -30,8 +31,9 @@ export default function SQLPage() {
     setLoading(false)
     
     if (query.includes("' OR '") || query.toLowerCase().includes(' or ') || query.includes('1=1')) {
-      setAlert({ type: 'warning', message: 'SQL injection successful! Unauthorized data exposed.' })
+      setAlert({ type: 'warning', message: '🎉 SQL injection successful! Lab completed - Unauthorized data exposed.' })
       setInjectionSuccess(true)
+      LabProgress.markComplete('sql-injection')
     } else if (query.trim()) {
       setAlert({ type: 'success', message: 'Search completed. Results filtered by your input.' })
       setInjectionSuccess(false)
