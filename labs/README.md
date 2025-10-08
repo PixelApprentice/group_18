@@ -1,50 +1,162 @@
-# SEKUR Labs (local run)
+# 🛡️ SEKUR Labs - Interactive Cybersecurity Training
 
-This folder contains four intentionally vulnerable labs used for learning: SQL Injection, Stored XSS, Broken Authentication, and IDOR.
+Modern, beginner-friendly vulnerability labs designed for hands-on learning. Each lab simulates real-world security vulnerabilities in a safe, educational environment.
 
-Quick local run (recommended for students / instructors):
+## 🎯 Available Labs
 
-Linux/macOS (with Docker):
+| Lab | Vulnerability | Difficulty | Description |
+|-----|---------------|------------|-------------|
+| **SQL Injection** | Database manipulation | Beginner | Learn how attackers bypass authentication and access unauthorized data |
+| **Cross-Site Scripting (XSS)** | Script injection | Beginner | Understand how malicious scripts can be injected into web applications |
+| **Broken Authentication** | Weak credentials | Beginner | Explore authentication bypass techniques and credential attacks |
+| **IDOR** | Access control | Beginner | Discover how to access unauthorized resources through URL manipulation |
 
+## 🚀 Quick Start Options
+
+### Option 1: Modern Frontend (Recommended)
 ```bash
-# from repository root
-docker compose -f docker-compose.yml up --build nginx lab_sql_injection lab_xss_stored lab_broken_auth lab_idor
+cd frontend/
+npm install
+npm run dev
+# Visit http://localhost:3005
 ```
 
-Windows (Docker Desktop):
-- Either run the same command in PowerShell (ensure Docker Desktop is running).
-- If using WSL2, run from inside WSL for best compatibility.
+**Features:**
+- ✅ Progress tracking
+- ✅ Interactive tutorials  
+- ✅ Beginner-friendly explanations
+- ✅ Dark/light themes
+- ✅ Mobile responsive
 
-Labs-only compose (no Nest backend):
-
+### Option 2: Backend Labs (Advanced)
 ```bash
+# From repository root
 docker compose -f docker-compose.labs.yml up --build
+# Visit http://localhost/lab/<name>/
 ```
 
-Notes:
-- Each lab is accessible at `http://localhost/lab/<name>/` when `nginx` is running.
-- If you run the labs-only compose, it will start `nginx` and the four lab services without the main Nest app.
-- For persistence between restarts, set `DB_FILE` environment variables in `docker-compose.labs.yml` and mount volumes.
+## 🌐 Production Deployment
 
-Per-lab quick guide
-- SQL Injection (`/lab/sql-injection/`): search for users. Hint: use <code>' OR '1'='1</code> to retrieve all users.
-- Stored XSS (`/lab/xss-stored/`): post a comment that includes HTML. Hint: use <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code>.
-- Broken Auth (`/lab/broken-auth/`): try sample account <code>victim/guessme</code>. The app stores plaintext passwords.
-- IDOR (`/lab/idor/`): click note IDs to view them; ownership is not enforced.
+### Frontend Hosting (Free Options)
 
-Windows / WSL notes
-- Docker Desktop: ensure it's running and WSL2 integration is enabled. Prefer running the project from inside WSL for best compatibility.
-- Ports: make sure ports 80 and 3001-3004 are not in use by other applications (IIS, local dev servers, etc.).
-- If nginx fails to start with host resolution errors, try `docker compose -f docker-compose.labs.yml up --build --remove-orphans`.
+**Vercel (Recommended):**
+```bash
+cd frontend/
+npm run build
+# Deploy to Vercel
+```
 
-Persistence
-- To persist lab SQLite files between restarts, use the optional compose overlay (see `docker-compose.labs.persist.yml`). It mounts per-lab volumes and sets `DB_FILE` for each service.
+**Netlify:**
+```bash
+cd frontend/
+npm run build
+# Deploy 'out' folder to Netlify
+```
 
-Additional cross-platform tips
-- macOS: run the labs compose from the Terminal app. If you see permission issues with Docker, ensure Docker Desktop is installed and running.
-- Linux: run the same docker compose command in a shell. If you run into permission issues, ensure your user can access the Docker daemon or use sudo.
-- Windows: WSL2 is recommended. Start a WSL2 terminal and run the docker compose commands from there. If using PowerShell, ensure Docker Desktop is available and the WSL integration is enabled.
+**GitHub Pages:**
+```bash
+cd frontend/
+npm run build
+# Upload 'out' directory
+```
 
-CI: hint smoke-tests (suggested)
-- You can add a CI job that starts the labs-only compose and runs `scripts/smoke-test-hints.sh` to validate the labs. See `.github/workflows/labs-hints.yml` for an example that the project includes.
+### Backend Services (Optional)
+- **Railway:** Free tier for Node.js apps
+- **Render:** Free tier with sleep mode
+- **Heroku alternatives:** Multiple options available
+
+## 📁 Project Structure
+
+```
+labs/
+├── frontend/           # Modern Next.js UI (recommended)
+│   ├── app/           # Lab pages and components
+│   ├── components/    # Reusable UI components
+│   ├── lib/          # Progress tracking utilities
+│   └── public/       # Static assets
+├── sql-injection/     # Backend SQL injection lab
+├── xss-stored/       # Backend XSS lab  
+├── broken-auth/      # Backend authentication lab
+├── idor/             # Backend IDOR lab
+└── DEPLOYMENT.md     # Complete hosting guide
+```
+
+## 🎓 Educational Features
+
+- **Progress Tracking:** Completion status saved locally
+- **Interactive Hints:** Progressive guidance system
+- **Real-world Context:** Professional UI that doesn't look obviously educational
+- **Success Feedback:** Clear indicators when vulnerabilities are exploited
+- **Mobile Friendly:** Works on all devices
+
+## 🔗 Integration with Main Platform
+
+Add this to your main SEKUR website navigation:
+
+```jsx
+<Link href="https://labs.yourdomain.com" target="_blank">
+  Practice Labs →
+</Link>
+```
+
+## 🛠️ Development
+
+**Frontend Development:**
+```bash
+cd frontend/
+npm install
+npm run dev      # Development server
+npm run build    # Production build
+npm run lint     # Code linting
+```
+
+**Backend Development:**
+```bash
+# Individual lab services
+cd sql-injection/
+npm install
+npm start        # Runs on port 3001
+
+cd xss-stored/
+npm start        # Runs on port 3002
+# etc.
+```
+
+## 📊 Hosting Costs
+
+- **Frontend:** FREE (Vercel/Netlify/GitHub Pages)
+- **Backend:** FREE tier available (Railway/Render)
+- **Custom Domain:** $10-15/year (optional)
+- **Total:** $0-15/year
+
+## 🔒 Security & Safety
+
+- ✅ **Educational Only:** Clear warnings displayed
+- ✅ **Simulated Vulnerabilities:** No real security risks
+- ✅ **Safe Environment:** Contained within application
+- ✅ **No Data Collection:** Privacy-focused design
+
+## 📱 Browser Support
+
+- ✅ Chrome/Chromium (recommended)
+- ✅ Firefox
+- ✅ Safari
+- ✅ Edge
+- ✅ Mobile browsers (iOS/Android)
+
+## 🚀 Quick Deployment Checklist
+
+- [ ] Clone repository
+- [ ] Install dependencies (`npm install`)
+- [ ] Test locally (`npm run dev`)
+- [ ] Build for production (`npm run build`)
+- [ ] Deploy to hosting platform
+- [ ] Configure custom domain (optional)
+- [ ] Add integration link to main site
+- [ ] Test all labs functionality
+
+**Estimated setup time:** 15-30 minutes  
+**Maintenance required:** Zero (fully automated)
+
+For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md)
 

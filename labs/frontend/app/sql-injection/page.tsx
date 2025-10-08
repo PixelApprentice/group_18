@@ -2,6 +2,7 @@
 import SidebarTutorial from '../../components/sidebar-tutorial'
 import { useState, useEffect } from 'react'
 import Modal from '../../components/modal'
+import Loading from '../../components/loading'
 import { LabProgress } from '../../lib/progress'
 
 export default function SQLPage() {
@@ -67,6 +68,7 @@ export default function SQLPage() {
           </div>
 
           <div className="mt-4" aria-live="polite">
+            {loading && <Loading />}
             {alert && (
               <div className={`p-3 rounded mb-3 ${alert.type==='warning' ? 'bg-warn/10 border border-warn' : 'bg-success/10 border border-success'}`}>
                 {alert.message}
