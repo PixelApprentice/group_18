@@ -10,10 +10,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Enable static export for deployment
-  output: 'export',
+  // Remove static export for Vercel - let Vercel handle it
   trailingSlash: true,
-  // Remove outputFileTracingRoot for static export
 }
 
 export default nextConfig
