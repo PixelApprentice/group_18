@@ -34,12 +34,91 @@ function LabCard({ title, href, icon, labId }: { title: string; href: string; ic
 }
 
 export default function Page() {
+  const [userId, setUserId] = useState('')
+  const [completedCount, setCompletedCount] = useState(0)
+  const [showProgressManager, setShowProgressManager] = useState(false)
+
+  useEffect(() => {
+    setUserId(LabProgress.getUserId())
+    setCompletedCount(LabProgress.getCompletedCount())
+  }, [])
+
+  const handleResetProgress = () => {
+    if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+      LabProgress.resetProgress()
+      setCompletedCount(0)
+      setShowProgressManager(false)
+      // Refresh the page to update all components
+      window.location.reload()
+    }
+  }
+
+  const handleExportProgress = () => {
+    const progress = LabProgress.exportProgress()
+    if (progress) {
+      const blob = new Blob([JSON.stringify(progress, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `sekur-labs-progress-${progress.userId}.json`
+      a.click()
+      URL.revokeObjectURL(url)
+    }
+  }
+
   return (
   <div>
       <section className="mb-8">
         <div className="max-w-3xl">
           <h1 className="text-3xl font-bold">Interactive Cybersecurity Learning</h1>
           <p className="text-white/70 mt-2">Realistic labs that simulate vulnerabilities in professional applications.</p>
+          
+          {/* Progress Summary */}
+          <div className="mt-4 flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-4">
+              <div className="text-sm text-white/60">
+                Progress: <span className="text-cyanAccent font-semibold">{completedCount}/4 labs completed</span>
+              </div>
+              <div className="text-xs text-white/50">
+                User: {userId.slice(0, 12)}...
+              </div>
+            </div>
+            <button 
+              onClick={() => setShowProgressManager(!showProgressManager)}
+              className="text-xs text-white/60 hover:text-white"
+            >
+              Manage Progress
+            </button>
+          </div>
+
+          {/* Progress Management Panel */}
+          {showProgressManager && (
+            <div className="mt-4 p-4 bg-white/5 rounded-lg border border-white/10">
+              <h3 className="font-semibold mb-3">Progress Management</h3>
+              <div className="space-y-3">
+                <div className="text-sm text-white/70">
+                  <strong>User ID:</strong> {userId}
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  <button 
+                    onClick={handleExportProgress}
+                    className="btn text-sm"
+                  >
+                    Export Progress
+                  </button>
+                  <button 
+                    onClick={handleResetProgress}
+                    className="text-sm px-3 py-1 bg-warn/20 text-warn border border-warn/30 rounded hover:bg-warn/30"
+                  >
+                    Reset Progress
+                  </button>
+                </div>
+                <div className="text-xs text-white/50">
+                  Your progress is stored locally in your browser. Export to backup or share your achievements.
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

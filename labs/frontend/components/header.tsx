@@ -1,8 +1,11 @@
 "use client"
 import { useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
   const [theme, setTheme] = useState<'dark'|'light'>('dark')
+  const pathname = usePathname()
+  const isHomePage = pathname === '/'
 
   useEffect(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('sekurlabs:theme') : null
@@ -25,9 +28,11 @@ export default function Header() {
           </div>
         </div>
         <nav className="flex items-center gap-4">
-          <a href="/" className="text-white/80 hover:text-white flex items-center gap-1">
-            ← Labs Home
-          </a>
+          {!isHomePage && (
+            <a href="/" className="text-white/80 hover:text-white flex items-center gap-1">
+              ← Home
+            </a>
+          )}
           <a href="https://portswigger.net/web-security" target="_blank" rel="noopener noreferrer" className="text-white/60 hover:text-white/80">OWASP Top 10</a>
           <button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} className="btn">{theme === 'dark' ? 'Light' : 'Dark'} Mode</button>
         </nav>
