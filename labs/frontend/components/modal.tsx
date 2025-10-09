@@ -1,20 +1,21 @@
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+
 interface ModalProps {
   title: string;
   children: React.ReactNode;
+  open: boolean;
   onClose: () => void;
 }
 
-export default function Modal({ title, children, onClose }: ModalProps) {
+export default function Modal({ title, children, open, onClose }: ModalProps) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="relative card max-w-2xl w-full z-10 mx-4">
-        <div className="flex items-center justify-between mb-2">
-          <h3 className="font-semibold">{title}</h3>
-          <button onClick={onClose} className="text-white/60 hover:text-white">✕</button>
-        </div>
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+        </DialogHeader>
         <div>{children}</div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }
